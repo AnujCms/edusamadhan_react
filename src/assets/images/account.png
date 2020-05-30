@@ -1,0 +1,357 @@
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-101169768-2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-101169768-2');
+</script>
+
+        <meta charset="UTF-8">
+        <title>Download a round image. Rounder — online photo editor</title>
+        <meta name="description" content="Make a round avatar, or any other photo or picture. oooo.plus">
+        <meta name=“robots” content=“noindex,nofollow”>
+        <link rel="alternate" hreflang="en" href="http://www.oooo.plus/en/final.php" />
+        <link rel="alternate" hreflang="ru" href="http://www.oooo.plus/final.php" />
+        
+        <link rel="icon" href="assets/images/fav/cropped-fav-32x32.png" sizes="32x32" />
+        <link rel="icon" href="assets/images/fav/cropped-fav-192x192.png" sizes="192x192" />
+        <link rel="apple-touch-icon-precomposed" href="assets/images/fav/cropped-fav-180x180.png" />
+        <meta name="msapplication-TileImage" content="assets/images/fav/cropped-fav-270x270.png" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- CDN FONTS -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,700i&amp;subset=cyrillic" rel="stylesheet">
+        <!-- INCLUDE CSS -->
+        <link rel="stylesheet" href="assets/css/style.css">
+        <script src="assets/js/fabric.js"></script>
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/temp.js"></script>        <script>
+            var id = '8';
+            var ims = 'chache/' + id + '.png';
+        </script>
+    </head>
+
+    <body>
+        <div class="wrap">
+            <!-- HEADER -->
+            <div id="main-header">
+                <div class="logo">
+                    <a class="icon icon-logo-img" href="crop.php"></a><a class="icon icon-logo" href="/en/"></a>
+                </div>
+                <div class="panel-edit">
+                    <!-- <a href="#" class="btn-new-photo btn-main"><span class="icon icon-plus"></span><span class="caption">Новый</span></a> -->
+                    <a href="#" download="oooo.plus_8.png" class="btn-save-photo btn-main btn-primary" target="_blank">Download</a>
+                    <a href="#" class="btn-reset-changes btn-main"><span class="icon icon-reset"></span><span class="caption">Reset</span></a>
+                </div>
+                <div class="lang"><p><a href="/">RU</a>EN</p></div>
+                <div class="clear"></div>
+            </div>
+            <!-- CONTENT -->
+            <div id="main-content">
+                <div class="content clear">
+                    <!-- SIDEBAR -->
+                    <div class="sidebar">
+                        <div class="tabs">
+                            <div class="nav-tabs">
+                                <ul>
+                                    <li><a href="#tab-bg" class="tab-bg active"><span class="icon"></span><span class="caption">Bg</span></a></li>
+                                    <li><a href="#tab-effect" class="tab-effect"><span class="icon"></span><span class="caption">Filters</span></a></li>
+                                    <li><a href="#tab-text" class="tab-text"><span class="icon"></span><span class="caption">Text</span></a></li>
+                                    <li><a href="#tab-sticker" class="tab-sticker"><span class="icon"></span><span class="caption">Stickers</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CANVAS -->
+                    <div class="canvas">
+                        <div class="edit-btns clear">
+                            <a href="#" class="btn-swap" id="flip_button"><span class="icon icon-swap"></span></a>
+                            <a href="#" class="btn-trash" id="remove"><span class="icon icon-trash"></span></a>
+                        </div>
+                        <div class="shape clear">
+                            <div class="shape-box" id="zoom">
+                                <canvas id="photoCanvas"></canvas>
+                            </div>
+                        </div>
+                        <div class="shape-zoom clear">
+                            <div class="tools">
+                                <div class="tool">
+                                    <div class="slider-zoom slider clear">
+                                        <span class="icon icon-zoom"></span>
+                                        <input type="range" id="zoom-range" min="30" max="200" step="5" value="100" class="range-slider__range">
+                                        <label>100%</label>
+                                    </div>
+                                </div>
+                                <div class="tool"><a href="#" class="btn-zoom-default">1:1</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CONTENT TABS -->
+                    <div class="cont-tabs">
+                        <div id="tab-bg" class="tab active">
+                            <div class="tools">
+                                <div class="bg-items">
+                                    <div class="colors switcher">
+                                        <ul class="clear">
+                                            <li id="transparent" class="btn-1 active"></li>
+                                            <li class="btn-2"></li>
+                                            <li class="btn-3"></li>
+                                            <li class="btn-4"></li>
+                                            <li class="btn-5"></li>
+                                            <li class="btn-6"></li>
+                                            <li class="btn-7"></li>
+                                            <li class="break"></li>
+                                            <li class="btn-8"></li>
+                                            <li class="btn-9"></li>
+                                            <li class="btn-10"></li>
+                                            <li class="btn-11"></li>
+                                            <li class="btn-12"></li>
+                                            <li class="btn-13"></li>
+                                            <li class="break"></li>
+                                            <li class="btn-14"></li>
+                                            <li class="btn-15"></li>
+                                            <li class="btn-16"></li>
+                                            <li class="btn-17"></li>
+                                            <li class="btn-18"></li>
+                                            <li class="btn-19"></li>
+                                            <li class="btn-20"></li>
+                                        </ul>
+                                    </div>
+                                    <div class="presets switcher">
+                                        <ul class="clear">
+                                            <li value="1"><img src="uploads/8.jpg" width="105.61" height="86.41" class="pic_thumb"></li>
+                                            <li value="7"><img src="assets/images/bg/thumbs/box7.png"></li>
+                                            <li value="31"><img src="assets/images/bg/thumbs/box31.png"></li>
+                                            <li value="23"><img src="assets/images/bg/thumbs/box23.png"></li>
+                                            <li value="14"><img src="assets/images/bg/thumbs/box14.png"></li>
+                                            <li value="32"><img src="assets/images/bg/thumbs/box32.png"></li>
+                                            <li value="9"><img src="assets/images/bg/thumbs/box9.png"></li>
+                                            <li value="21"><img src="assets/images/bg/thumbs/box21.png"></li>
+                                            <li value="36"><img src="assets/images/bg/thumbs/box36.png"></li>
+                                            <li value="30"><img src="assets/images/bg/thumbs/box30.png"></li>
+                                            <li value="18"><img src="assets/images/bg/thumbs/box18.png"></li>
+                                            <li value="19"><img src="assets/images/bg/thumbs/box19.png"></li>
+                                            <li value="35"><img src="assets/images/bg/thumbs/box35.png"></li>
+                                            <li value="22"><img src="assets/images/bg/thumbs/box22.png"></li>
+                                            <li value="25"><img src="assets/images/bg/thumbs/box25.png"></li>
+                                            <li value="4"><img src="assets/images/bg/thumbs/box4.png"></li>
+                                            <li value="26"><img src="assets/images/bg/thumbs/box26.png"></li>
+                                            <li value="12"><img src="assets/images/bg/thumbs/box12.png"></li>
+                                            <li value="34"><img src="assets/images/bg/thumbs/box34.png"></li>
+                                            <li value="15"><img src="assets/images/bg/thumbs/box15.png"></li>
+                                            <li value="17"><img src="assets/images/bg/thumbs/box17.png"></li>
+                                            <li value="21"><img src="assets/images/bg/thumbs/box21.png"></li>
+                                            <li value="24"><img src="assets/images/bg/thumbs/box24.png"></li>
+                                            <li value="28"><img src="assets/images/bg/thumbs/box28.png"></li>
+                                            <li value="8"><img src="assets/images/bg/thumbs/box8.png"></li>
+                                            <li value="6"><img src="assets/images/bg/thumbs/box6.png"></li>
+                                            <li value="10"><img src="assets/images/bg/thumbs/box10.png"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="extra-tools">
+                                <div class="tool tool-width">
+                                    <div class="slider clear">
+                                        <span class="icon icon-resize"></span>
+                                        <input type="range" min="50" max="100" value="100" id="img-width" class="range-slider__range">
+                                        <label>100%</label>
+                                    </div>
+                                </div>
+                                <div class="tool tool-opacity" style="display: block;">
+                                    <div class="slider clear">
+                                        <span class="icon icon-opacity"></span>
+                                        <input type="range" min="10" max="100" value="30" class="range-slider__range" id="bg_opacity">
+                                        <label>30%</label>
+
+                                    </div>
+                                </div>
+                                <div class="tool tool-opacity-bg">
+                                    <div class="slider clear">
+                                        <span class="icon icon-opacity"></span>
+                                        <input step="1" type="range" min="10" max="100" value="75" class="range-slider__range" id="img_opacity">
+                                        <label>75%</label>
+                                    </div>
+                                </div>
+                                <div class="tool tool-blur">
+                                    <div class="slider clear">
+                                        <span class="icon icon-blur"></span>
+                                        <input type="range" step="1" min="0" max="100" value="0" class="range-slider__range" id="img_blur">
+                                        <label>0%</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-effect" class="tab">
+                            <div class="tools">
+                                <div class="eff-items">
+                                <div class="filters switcher">
+                                    <ul class="clear">
+                                        <li class="active" data-filter="100"><img src="assets/images/f/f_no.png">
+                                        <li data-filter="0"><img src="assets/images/f/f_brownie.png">
+                                        <li data-filter="1"><img src="assets/images/f/f_kodachrome.png">
+                                        <li data-filter="7"><img src="assets/images/f/f_gray_on_mid.png">
+                                        <li data-filter="2"><img src="assets/images/f/f_solenoid.png">
+                                        <li data-filter="3"><img src="assets/images/f/f_technicolor.png">
+                                        <li data-filter="4"><img src="assets/images/f/f_polaroid.png">
+                                        <li data-filter="5"><img src="assets/images/f/f_vintage.png">
+                                        <li data-filter="6"><img src="assets/images/f/f_miracle.png">
+                                    </ul>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="extra-tools">
+                                <div class="tool tool-f-opacity">
+                                    <div class="slider">
+                                        <span class="icon icon-opacity"></span>
+                                        <input type="range" step="5" type="range" min="10" max="100" value="100" id="f-opacity" class="range-slider__range">
+                                        <label>100%</label>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                        <div id="tab-text" class="tab">
+                            <div class="tools">
+                                <div class="text-mix">
+                                    <div class="text-events">
+                                        <div class="btn-add">
+                                            <a href="#" class="btn-add-text btn-main btn-primary" id="button_text">Add text</a>
+                                        </div>
+                                        <div class="btn-effects">
+                                            <div class="effects">
+                                                <a href="#" class="btn-bold">B</a>
+                                                <a href="#" class="btn-italic">I</a>
+                                                <a href="#" class="btn-underline">U</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-colors switcher">
+                                        <ul class="clear">
+                                            <li class="btn-1 active"></li>
+                                            <li class="btn-2"></li>
+                                            <li class="btn-3"></li>
+                                            <li class="btn-4"></li>
+                                            <li class="btn-5"></li>
+                                            <li class="btn-6"></li>
+                                            <li class="btn-7"></li>
+                                            <li class="break"></li>
+                                            <li class="btn-8"></li>
+                                            <li class="btn-9"></li>
+                                            <li class="btn-10"></li>
+                                            <li class="btn-11"></li>
+                                            <li class="btn-12"></li>
+                                            <li class="btn-13"></li>
+                                            <li class="break"></li>
+                                            <li class="btn-14"></li>
+                                            <li class="btn-15"></li>
+                                            <li class="btn-16"></li>
+                                            <li class="btn-17"></li>
+                                            <li class="btn-18"></li>
+                                            <li class="btn-19"></li>
+                                            <li class="btn-20"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="text-presets switcher">
+                                    <div class="text-presets-box">
+                                        <div class="row">
+                                            <ul class="clear">
+                                                <li class="active" id="Arial"><p>Text</p></li>
+                                                <li id="Intro"><p>Text</p></li>
+                                                <li id="SignPainter"><p>Text</p></li>
+                                            </ul>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="clear">
+                                                <li id="Impact"><p>Text</p></li>
+                                                <li id="Lora-Bold"><p>Text</p></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-sticker" class="tab">
+                            <div class="tools">
+                                <div class="stickers">
+                                    <ul class="clear">
+                                        <li id='1031'><img src="assets/images/stickers/thumbs/1031.png"></li>
+                                        <li id='1030'><img src="assets/images/stickers/thumbs/1030.png"></li>
+                                        <li id='1029'><img src="assets/images/stickers/thumbs/1029.png"></li>
+                                        <li id='1028'><img src="assets/images/stickers/thumbs/1028.png"></li>
+                                        <li id='1027'><img src="assets/images/stickers/thumbs/1027.png"></li>
+                                        <li id='1026'><img src="assets/images/stickers/thumbs/1026.png"></li>
+                                        <li id='1025'><img src="assets/images/stickers/thumbs/1025.png"></li>
+                                        <li id='1022'><img src="assets/images/stickers/thumbs/1022.png"></li>
+                                        <li id='1007'><img src="assets/images/stickers/thumbs/1007.png"></li>
+                                        <li id='1006'><img src="assets/images/stickers/thumbs/1006.png"></li>
+                                        <li id='1021'><img src="assets/images/stickers/thumbs/1021.png"></li>
+                                        <li id='1010'><img src="assets/images/stickers/thumbs/1010.png"></li>
+                                        <li id='1001'><img src="assets/images/stickers/thumbs/1001.png"></li>     
+                                        <li id='1008'><img src="assets/images/stickers/thumbs/1008.png"></li>
+                                        <li id='1012'><img src="assets/images/stickers/thumbs/1012.png"></li>
+                                        <li id='1005'><img src="assets/images/stickers/thumbs/1005.png"></li>
+                                        <li id='1009'><img src="assets/images/stickers/thumbs/1009.png"></li>
+                                        <li id='1004'><img src="assets/images/stickers/thumbs/1004.png"></li>
+                                        <li id='1011'><img src="assets/images/stickers/thumbs/1011.png"></li>
+                                        <li id='1003'><img src="assets/images/stickers/thumbs/1003.png"></li>
+                                        <li id='1015'><img src="assets/images/stickers/thumbs/1015.png"></li>
+                                        <li id='1017'><img src="assets/images/stickers/thumbs/1017.png"></li>
+                                        <li id='1019'><img src="assets/images/stickers/thumbs/1019.png"></li>
+                                        <li id='1023'><img src="assets/images/stickers/thumbs/1023.png"></li>
+                                        <li id='1018'><img src="assets/images/stickers/thumbs/1018.png"></li>
+                                        <li id='1014'><img src="assets/images/stickers/thumbs/1014.png"></li>
+                                        <li id='1024'><img src="assets/images/stickers/thumbs/1024.png"></li>
+                                        <li id='1016'><img src="assets/images/stickers/thumbs/1016.png"></li>
+                                        <li id='1020'><img src="assets/images/stickers/thumbs/1020.png"></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ads"><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- plus_336_280 -->
+<ins class="adsbygoogle"
+    style="display:inline-block;width:336px;height:280px"
+    data-ad-client="ca-pub-8524140162398466"
+    data-ad-slot="8434055967"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+                </div>
+            </div>
+            <!-- FOOTER -->
+            <div id="main-footer">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- plus_728x90 -->
+<ins class="adsbygoogle"
+    style="display:inline-block;width:728px;height:90px"
+    data-ad-client="ca-pub-8524140162398466"
+    data-ad-slot="1022469808"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+            </div>
+        </div>
+
+        <!-- CDN JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+        <!-- INCLUDE JS -->
+        <script src="assets/js/jquery.nicescroll.min.js?ver=35"></script>
+        <script src="assets/js/jquery.ui.touch-punch.min.js?ver=35"></script>
+        <script src="assets/js/init.js"></script>
+
+    </body>
+
+    </html>
