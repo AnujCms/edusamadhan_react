@@ -1,22 +1,19 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedStudent";
-import { withStyles, withWidth, Button, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
-import Navbar from '../../components/Navbar';
 import { Switch, Route, Redirect } from "react-router-dom";
+import { studentObj, StudentContextProvider } from '../StudentContext';
+import Navbar from '../../components/Navbar';
 import { NavLink } from 'react-router-dom'
 import SessionTimer from '../../TimeOutRenderer';
-import { studentObj, StudentContextProvider } from '../StudentContext';
+import {Person, Notifications, ExitToApp, EventSeat} from '@material-ui/icons';
+import { withStyles, withWidth, Button, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
+import TeacherImage from '../../assets/images/admin.png';
 import StudentDetails from './StudentDetails';
 import StudentLogbook from './StudentLogbook';
 import Logbook from '../Logbook/Logbook';
-import TeacherImage from '../../assets/images/admin.png';
-import StudentProfile from './StudentProfile';
+import StudentProfile from '../UserProfile/Profile';
 import StudentEvents from './StudentsEvents';
 import StudentNotifications from './StudentNotifications';
-import PersonIcon from '@material-ui/icons/Person';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import EmojiEventsIcon from '@material-ui/icons/EventSeat';
 import NotificationDetails from './NotificationDetails';
 import EventDetails from './EventDetails';
 import ViewTimeTable from '../TimeTable/TimeTable';
@@ -103,10 +100,10 @@ class StudentHomePage extends React.Component {
                     onClose={this.handlepopClose}
                 >
                     <div className={classes.simpleMenu}>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EmojiEventsIcon className={classes.btnIcon}/><NavLink to={`${match.url}/eventslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Events</NavLink></MenuItem>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><NotificationsIcon className={classes.btnIcon}/><NavLink to={`${match.url}/notificationslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Notifications</NavLink></MenuItem>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><PersonIcon className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
-                        <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToAppIcon className={classes.btnIcon}/>Logout</MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EventSeat className={classes.btnIcon}/><NavLink to={`${match.url}/eventslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Events</NavLink></MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Notifications className={classes.btnIcon}/><NavLink to={`${match.url}/notificationslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Notifications</NavLink></MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Person className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
+                        <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToApp className={classes.btnIcon}/>Logout</MenuItem>
                     </div>
                 </Menu>,
                 <NavLink to={`${match.url}/studentsdetails`} className={classes.navLink} style={{ textDecorationLine: "none" }} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Home</NavLink>,

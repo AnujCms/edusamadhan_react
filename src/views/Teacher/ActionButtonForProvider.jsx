@@ -49,7 +49,7 @@ class ActionButtonForProvider extends React.Component {
     }
     handleFeeDetailsClick = () => {
         this.setState({ anchorEl: null });
-        this.props.getFeeDetails(this.props.adharnumber)
+        this.props.getFeeDetails(this.props.adharnumber, this.props.mediumType)
     }
     handleSendNotification = () =>{
         this.setState({ anchorEl: null });

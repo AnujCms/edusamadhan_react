@@ -93,7 +93,7 @@ class LoginPage extends React.Component {
           studentname: response.data.studentname,
           accountid: response.data.accountid,
           configdata: response.data.configdata,
-          accouttype: JSON.parse(response.data.configdata).accounttype,
+          accouttype: response.data.userrole!="SuperAdmin"&&JSON.parse(response.data.configdata).accounttype,
           accountname: response.data.accountname,
           image: response.data.image
         });

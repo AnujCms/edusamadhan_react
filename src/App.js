@@ -19,12 +19,12 @@ const StudentHomePage = React.lazy(() => import('./views/Student/StudentHomePage
 const Parent = React.lazy(() => import('./views/Parent/Parent'));
 const TestHomePage = React.lazy(() => import('./views/ExaminationNew/ExamHome'));
 const EntranceExamHead = React.lazy(() => import( './views/EntranceExamHead/EntranceExamHead'));
-const FeeAccount = React.lazy(() => import('./views/FeeAccount/FeeAccount'));
+const FeeAccount = React.lazy(() => import('./views/Accountant/FeeAccount'));
 const FirstTimeLogin = React.lazy(()=> import ('./views/LoginPage/FirstTimeLogin'));
 const TermAndCondition = React.lazy(()=> import ('./views/LoginPage/TermAndCondition'));
 const PrivacyPolicy = React.lazy(()=> import ('./views/LoginPage/PrivacyPolicy'));
 const EntranceCompleted = React.lazy(()=> import ('./views/EntranceCompleted/EntranceCompleted'));
-const PrintFeeReciept = React.lazy(()=> import ('./views/FeeAccount/PrintFeeReciept'));
+const PrintFeeReciept = React.lazy(()=> import ('./views/Accountant/PrintFeeReciept'));
 const StudentRegistrationPrint = React.lazy(()=> import ('./views/Teacher/StudentRegistrationPrint'));
 const HomePage = React.lazy(()=> import ('./views/HomePage/HomePage'));
 

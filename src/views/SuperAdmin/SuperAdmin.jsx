@@ -1,17 +1,18 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
-import { withStyles, Button, Menu, MenuItem } from '@material-ui/core';
+import {dashboardObj, SuperAdminDashboarContextProvider} from '../Context/SuperAdminDashboardContext';
+import { NavLink, Switch, Route, Redirect } from "react-router-dom";
+import { withStyles, Button, Menu, MenuItem, Avatar } from '@material-ui/core';
+import { Person, ExitToApp, AccessAlarm} from '@material-ui/icons';
 import ManageAccount from "./ManageAccount";
 import StudentList from './StudentList';
-import { NavLink } from 'react-router-dom'
 import Navbar from '../../components/Navbar';
-import { Switch, Route, Redirect } from "react-router-dom";
-import CreateAccount from './Create';
+import CreateAccount from './CreateAccount';
 import SessionTimer from '../../TimeOutRenderer';
 import Logbook from '../Logbook/Logbook';
-import Avatar from '@material-ui/core/Avatar';
 import TeacherImage from '../../assets/images/admin.png';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Profile from '../UserProfile/Profile';
+import ResetPassword from '../ResetPassword/ResetPassword';
 
 const styles = theme => ({
     navLink: { padding: "20px 20px", textDecorationLine: "none", display: "inline-flex", float: "left" },
@@ -24,9 +25,22 @@ const styles = theme => ({
 });
 
 class SuperAdmin extends React.Component {
-    state = {
-        accountid: null, openPopUp: true, checkedDontShow: '', anchorEl: null, isLogout: false
+    constructor(props){
+    super(props)
+    this.state = {changeTeacherSelection:this.changeTeacherSelection,
+        teacherDetails:dashboardObj, accountid: null, openPopUp: true, checkedDontShow: '', anchorEl: null, isLogout: false
     };
+}
+    changeTeacherSelection = (userObj) => {
+        if(userObj)
+        {
+        this.setState({ teacherDetails: userObj });
+        }
+        else{
+          this.setState({teacherDetails:dashboardObj});
+
+        }
+      };
     handleChange = name => event => {
         this.setState({ [name]: event.target.checked });
     };
@@ -77,7 +91,9 @@ class SuperAdmin extends React.Component {
                 onClose={this.handlepopClose}
             >
                 <div className={classes.simpleMenu}>
-                    <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToAppIcon className={classes.btnIcon}/>Logout</MenuItem>
+                <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Person className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
+                <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><AccessAlarm className={classes.btnIcon}/><NavLink to={`${match.url}/resetpassword`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Re-Set Pssword</NavLink></MenuItem>
+                <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToApp className={classes.btnIcon}/>Logout</MenuItem>
                 </div>
             </Menu>,
             <NavLink to={`${match.url}/studentlist`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Home</NavLink>,
@@ -90,7 +106,7 @@ class SuperAdmin extends React.Component {
                 <Navbar Nav={Nav} homeLink={'./studentlist'} history={this.props.history} userDetails={this.props.currentUser.userDetails} isLogout={this.state.isLogout}/>
                 <SessionTimer userTimer={this.props.currentUser.userTimer} {...this.props} />
                 <div className={classes.pad60}>
-
+                    <SuperAdminDashboarContextProvider value={this.state}>
                     <Switch>
                         <Route path={`${match.url}/editsubaccount/:accountid`} render={(props) => <CreateAccount accountid={props.match.params.accountId} parentAccountId={props.match.params.accountId} {...props} />} />
                         <Route path={`${match.url}/logbook/:studentid/:teacherid`} render={(props) => <Logbook studentid={props.match.params.studentid} teacherid={props.match.params.teacherid} key={props.match.params.studentid} {...props} />} />
@@ -98,8 +114,11 @@ class SuperAdmin extends React.Component {
                         <Route path={`${match.url}/create-account`} component={CreateAccount} />
                         <Route path={`${match.url}/edit-account/:accountId`} render={(props) => <CreateAccount accountId={props.match.params.accountId} {...props} />} />
                         <Route path={`${match.url}/studentlist`} component={StudentList} />
+                        <Route path={`${match.url}/profile`} component={Profile} />
+                        <Route path={`${match.url}/resetpassword`} component={ResetPassword} />
                         <Redirect to={`${match.url}/studentlist`} ></Redirect>
                     </Switch>
+                    </SuperAdminDashboarContextProvider>
                 </div>
             </div>
         )

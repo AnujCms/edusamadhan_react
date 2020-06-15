@@ -56,7 +56,7 @@ class ManageAccount extends React.Component {
             label: "School Name",
             options: {
                 filter: false,
-                sort: true,
+                sort: false,
                 searchable: true,
             }
         },
@@ -65,7 +65,7 @@ class ManageAccount extends React.Component {
             name: "accountrefnumber",
             label: "Registration No.",
             options: {
-                filter: true,
+                filter: false,
                 sort: false,
                 searchable: true
             }

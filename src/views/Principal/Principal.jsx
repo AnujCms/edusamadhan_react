@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { AccountContextProvider, WithAccount } from '../AccountContext';
 import AuthenticatedPage from "../AuthenticatedPage";
 import Navbar from '../../components/Navbar';
+import { NavLink } from 'react-router-dom'
+import SessionTimer from '../../TimeOutRenderer';
 import { Switch, Route, Redirect } from "react-router-dom";
 import { withStyles, withWidth, Typography } from '@material-ui/core';
 import TeachersList from './TeachersList';
 import RegisterTeacher from './CreateTeacher';
-import { NavLink } from 'react-router-dom'
-import SessionTimer from '../../TimeOutRenderer';
 import StudentsList from './StudentsList';
 import ManageSubjects from './ManageSubjects';
 import Logbook from '../Logbook/Logbook';
 import AdminMenuItem from './AdminMenuItem';
 import TeacherDetails from './TeacherDetails';
 import StudentDetails from './StudentDetails';
-import PrincipalProfile from './PrincipalProfile';
+import PrincipalProfile from '../UserProfile/Profile';
 import EventsList from '../Events/EventsList';
 import CreateEvent from '../Events/CreateEvent';
 import NotificationsList from '../Notifications/NotificationsList';
@@ -24,7 +24,7 @@ import EventDetails from './EventDetails';
 import TimeTable from '../TimeTable/TimeTable';
 import CreateTimeTable from '../TimeTable/CreateTimeTable';
 import CreatePeriod from '../TimeTable/CreatePeriod';
-import ViewAllFeeDetails from '../FeeAccount/ViewAllFeeDetails';
+import ViewAllFeeDetails from '../Accountant/ViewAllFeeDetails';
 import ResetPassword from '../ResetPassword/ResetPassword';
 
 const styles = theme => ({
@@ -94,7 +94,8 @@ class AccountAdmin extends Component {
                 <NavLink to={`${match.url}/viewallfeedetails`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>View Fee Details</NavLink>,
                 <NavLink to={`${match.url}/notificationslist`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Notifications</NavLink>,
                 <NavLink to={`${match.url}/eventslist`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Events</NavLink>,
-                <NavLink to={`${match.url}/profile`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Profile</NavLink>
+                <NavLink to={`${match.url}/profile`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Profile</NavLink>,
+                <NavLink to={`${match.url}/resetpassword`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Re-Set Password</NavLink>
             ];
         } else {
             Nav = [
@@ -105,8 +106,7 @@ class AccountAdmin extends Component {
                 <NavLink to={`${match.url}/teacherlist`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Home</NavLink>,
                 <NavLink to={`${match.url}/create-user`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Create User</NavLink>,
                 <NavLink to={`${match.url}/manage-subjects`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Manage Subjects</NavLink>,
-                <NavLink to={`${match.url}/timetable`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Manage TimeTable</NavLink>,
-
+                <NavLink to={`${match.url}/timetable`} className={classes.navLink} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Manage TimeTable</NavLink>
             ];
         }
         return (

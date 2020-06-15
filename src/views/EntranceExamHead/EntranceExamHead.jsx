@@ -1,26 +1,20 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
-import StudentList from './StudentList';
+import StudentList from './Students/StudentList';
 import Navbar from '../../components/Navbar';
-import { NavLink } from 'react-router-dom'
-import { Switch, Route, Redirect } from "react-router-dom";
+import { NavLink, Switch, Route, Redirect } from "react-router-dom";
 import SessionTimer from '../../TimeOutRenderer';
-import { withStyles, withWidth, Menu, Button, Typography } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
-import CreateStudent from './CreateStudent';
-import CreateQuestion from './CreateQuestion';
-import QuestionList from './QuestionList';
-import Avatar from '@material-ui/core/Avatar';
+import { withStyles, withWidth, Menu, MenuItem, Button, Typography, Avatar } from '@material-ui/core';
+import {EventSeat, Person, Notifications, ExitToApp} from '@material-ui/icons';
+import CreateStudent from './Students/CreateStudent';
+import CreateQuestion from './Questions/CreateQuestion';
+import QuestionList from './Questions/QuestionList';
 import TeacherImage from '../../assets/images/admin.png';
-import StudentDetails from './StudentDetails';
-import ExamHeadProfile from './ExamHeadProfile';
+import StudentDetails from './Students/StudentDetails';
+import ExamHeadProfile from '../UserProfile/Profile';
 import ExamHeadNotifications from './ExamHeadNotifications';
-import QuestionDetails from './QuestionDetails';
-import PersonIcon from '@material-ui/icons/Person';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import QuestionDetails from './Questions/QuestionDetails';
 import ExamHeadEvents from './ExamHeadEvents';
-import EmojiEventsIcon from '@material-ui/icons/EventSeat';
 import NotificationDetails from './NotificationDetails';
 import EventDetails from './EventDetails';
 import TimeTable from '../TimeTable/TimeTable';
@@ -65,8 +59,8 @@ class EntranceExamHead extends React.Component {
                 <NavLink to={`${match.url}/view-question`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Manage Questions</NavLink>,
                 <NavLink to={`${match.url}/notifications`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Notifications</NavLink>,
                 <NavLink to={`${match.url}/eventslist`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Events</NavLink>,
-                <NavLink to={`${match.url}/resetpassword`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Re-Set Password</NavLink>,
-                <NavLink to={`${match.url}/profile`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Profile</NavLink>
+                <NavLink to={`${match.url}/profile`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: 'bold', color: "red" }}>Profile</NavLink>,
+                <NavLink to={`${match.url}/resetpassword`} className={classes.navLinkMobile + " " + classes.dispBlk} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Re-Set Password</NavLink>
             ];
         } else {
             var Nav = [
@@ -90,11 +84,11 @@ class EntranceExamHead extends React.Component {
                     onClose={this.handlepopClose}
                 >
                     <div className={classes.simpleMenu}>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><NotificationsIcon className={classes.btnIcon}/><NavLink to={`${match.url}/notifications`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Notifications</NavLink></MenuItem>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EmojiEventsIcon className={classes.btnIcon}/><NavLink to={`${match.url}/eventslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Events</NavLink></MenuItem>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EmojiEventsIcon className={classes.btnIcon}/><NavLink to={`${match.url}/resetpassword`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Re-Set Pssword</NavLink></MenuItem>
-                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><PersonIcon className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
-                        <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToAppIcon className={classes.btnIcon}/>Logout</MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Notifications className={classes.btnIcon}/><NavLink to={`${match.url}/notifications`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Notifications</NavLink></MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EventSeat className={classes.btnIcon}/><NavLink to={`${match.url}/eventslist`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Events</NavLink></MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Person className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
+                        <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><EventSeat className={classes.btnIcon}/><NavLink to={`${match.url}/resetpassword`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Re-Set Pssword</NavLink></MenuItem>
+                        <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToApp className={classes.btnIcon}/>Logout</MenuItem>
                     </div>
                 </Menu>,
                 <NavLink to={`${match.url}/studentlist`} className={classes.navLink} style={{ textDecorationLine: "none" }} activeClassName="active" activeStyle={{ fontWeight: "bold", color: "red" }}>Home</NavLink>,

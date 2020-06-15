@@ -1,6 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Button, Card, Grid, Paper, FormLabel, InputAdornment, CardActions, Typography, FormControlLabel, Radio } from '@material-ui/core';
+import { withStyles, Card, Grid, FormLabel, InputAdornment, CardActions, Typography, FormControlLabel, Radio } from '@material-ui/core';
 import AuthenticatedPage from "../AuthenticatedPage";
 import { Field, connect } from 'formik';
 import FormikTextField from '../../components/FormikValidatedComponents/TextField';

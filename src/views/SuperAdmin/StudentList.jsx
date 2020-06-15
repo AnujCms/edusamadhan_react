@@ -1,16 +1,15 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
-import Select from 'mui-select-with-search-vivek';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import { withStyles, Avatar } from '@material-ui/core';
+import { withStyles, Avatar, Paper, Grid } from '@material-ui/core';
 import ActionButton from '../../components/LogbookForSuperAdmin';
-import Paper from '@material-ui/core/Paper';
 import MuiThemeDataTable from '../../components/MuiThemeDataTable';
 import GridContainer from "../../components/Grid/GridContainer.jsx";
 import GridItem from "../../components/Grid/GridItem.jsx";
 import AdminImage from '../../assets/images/admin.png';
 import { Helmet } from "react-helmet";
+import FormikSelect from '../../components/FormikValidatedComponents/SelectFieldWithLabel';
+import { Formik, Form, Field } from 'formik';
+import WithSuperAdminDashboard from '../Context/WithSuperAdminDashboard';
 
 const styles = theme => ({
     root: {
@@ -19,14 +18,20 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit * 1,
         paddingBottom: theme.spacing.unit * 1,
     },
+    topM:{marginTop:"15px"},
+    paddingBottom: { padding: "10px" },
+    inputSelect: { width: "610px", [theme.breakpoints.down('sm')]: { width: "370px" } },
         selectItemWrapper: { display: 'inline-Flex', alignItems: 'center', margin: "10px" }
 });
 
 class StudentList extends React.Component {
-    state = {
-        accounts: [], accountid: null, providers: [], providerid: null, students: [], studentName: ''
+    constructor(props){
+        super(props)
+        this.fieldVariables = { selectedAccount: "", selectedTeacher: "" }
+        this.state = {
+        accounts: [], selectedAccount: null, teacherArray: [], selectedTeacher: null, students: [], studentName: ''
     };
-
+    }
     tableheads1 = [
         {
             name: "images",
@@ -145,7 +150,7 @@ class StudentList extends React.Component {
                 print: false,
                 customBodyRender: (value) => {
                     return (
-                        <ActionButton studentid={value.studentid} teacherid={this.state.providerid.value} studentName={value.studentName} onLogBookClick={this.onLogBookClick} />
+                        <ActionButton studentid={value.studentid} teacherid={this.state.selectedTeacher} studentName={value.studentName} onLogBookClick={this.onLogBookClick} />
                     )
                 }
             }
@@ -155,6 +160,13 @@ class StudentList extends React.Component {
         this.props.history.push('./logbook/' + studentid + '/' + teacherid)
     }
     async componentDidMount() {
+        let contextData = this.props.selectedSchoolAndTeacher.teacherDetails.teacherState;
+        if(contextData){
+            console.log(contextData)
+            this.setState({students:contextData.students, selectedAccount:contextData.selectedAccount, teacherArray:contextData.teacherArray})
+            this.fieldVariables.selectedAccount = contextData.selectedAccount
+            this.fieldVariables.selectedTeacher = contextData.selectedTeacher
+        }
         let response = await this.props.authenticatedApiCall('get', '/api/superadminservice/all', null)
         if (response.data.status == 1) {
             let labelsArray = response.data.statusDescription.map((item) => {
@@ -165,27 +177,19 @@ class StudentList extends React.Component {
     }
 
     handleAccountChange = async selectedValue => {
-        this.setState({
-            accountid: selectedValue,
-            providers: [],
-            providerid: null
-        })
         let url = '/api/superadminservice/' + selectedValue.value + '/teachersforselectedaccount/all';
         let response = await this.props.authenticatedApiCall('get', url, null)
         if (response.data.status == 1) {
             let labelsArray = response.data.statusDescription.map((item) => {
                 return { value: item.userid, label: item.firstname +" "+ item.lastname }
             });
-            this.setState({ providers: labelsArray })
+            this.setState({selectedAccount: selectedValue, teacherArray: labelsArray })
         }
     };
 
-    handleProviderChange = async (selectedValue) => {
-        this.setState({
-            providerid: selectedValue,
-            students: []
-        })
-        let url = "/api/superadminservice/" + this.state.accountid.value + "/" + selectedValue.value + "/students";
+    handleTeacherChange = async (selectedValue) => {
+        console.log(this.state.selectedAccount,selectedValue)
+        let url = "/api/superadminservice/" + this.state.selectedAccount.value + "/" + selectedValue.value + "/students";
         let response = await this.props.authenticatedApiCall('get', url, null)
         if (response.data.status == 1) {
             response.data.statusDescription.forEach((item) => {
@@ -208,11 +212,14 @@ class StudentList extends React.Component {
                 else if (item.gender == 2) { item.gender = "Male" }
             });
             this.setState({
-                students: response.data.statusDescription
-            })
+                selectedTeacher: selectedValue, students: response.data.statusDescription },() => this.props.selectedSchoolAndTeacher.changeTeacherSelection({
+                    teacherState: this.state
+        }))
             if (this.state.patients !== null) {
                 return
             }
+        }else{
+            this.setState({students:[]})
         }
     };
 
@@ -223,40 +230,46 @@ class StudentList extends React.Component {
             <Helmet> <title>Students List</title></Helmet>
                 <GridContainer justify="center">
                     <GridItem md={12}>
-                        <Paper className={classes.root} elevation={1}>
-                            <div className={this.props.classes.selectItemWrapper}>
-                                <InputLabel>Accounts</InputLabel>
-                                <FormControl
-                                    style={{ width: 350 }}
-                                >
-                                    <Select
-                                        value={this.state.accountid}
-                                        onChange={this.handleAccountChange}
-                                        options={this.state.accounts}
-                                        placeholder='Select an Account'
-                                        menuPortalTarget={document.body}
-                                        styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                    >
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div className={this.props.classes.selectItemWrapper}>
-                                <InputLabel>Teachers</InputLabel>
-                                <FormControl
-                                    style={{ width: 350 }}
-                                >
-                                    <Select
-                                        value={this.state.providerid}
-                                        onChange={this.handleProviderChange}
-                                        options={this.state.providers}
-                                        placeholder='Select a Teacher'
-                                        menuPortalTarget={document.body}
-                                        styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                    >
-                                    </Select>
-                                </FormControl>
-                            </div>
-                        </Paper>
+                    <Formik onSubmit={this.handleSubmit} validationSchema={this.yupSchema} initialValues={this.fieldVariables}>
+                            {(props) => (
+                                <Form>
+                                    <Paper className={classes.topM}>
+                                        <Grid container>
+                                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '1000' }}>
+                                                <Field
+                                                    name="selectedAccount"
+                                                    options={this.state.accounts}
+                                                    placeholder={"Select an Account"}
+                                                    className={classes.inputSelect + " " + "selectstyle"}
+                                                    component={FormikSelect}
+                                                    onChange={this.handleAccountChange}
+                                                    isSearchable={false}
+                                                    variant="filled"
+                                                    isClearable={false}
+                                                    menuPortalTarget={document.body}
+                                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                                                />
+                                            </Grid>
+                                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '1000' }}>
+                                                <Field
+                                                    name="selectedTeacher"
+                                                    options={this.state.teacherArray}
+                                                    placeholder={"Select a Teacher"}
+                                                    className={classes.inputSelect + " " + "selectstyle"}
+                                                    component={FormikSelect}
+                                                    onChange={this.handleTeacherChange}
+                                                    isSearchable={false}
+                                                    variant="filled"
+                                                    isClearable={false}
+                                                    menuPortalTarget={document.body}
+                                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+                                </Form>
+                            )}
+                        </Formik>
                         <MuiThemeDataTable title={'Students List'} rows={this.state.students} columns={this.tableheads1} />
                     </GridItem>
                 </GridContainer>
@@ -265,4 +278,4 @@ class StudentList extends React.Component {
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("SuperAdmin")(StudentList));
+export default withStyles(styles)(WithSuperAdminDashboard(AuthenticatedPage("SuperAdmin")(StudentList)));

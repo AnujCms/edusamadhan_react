@@ -1,11 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { withStyles } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
-import LockIcon from '@material-ui/icons/Lock';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import {withStyles, Button, Menu, MenuItem} from '@material-ui/core';
+import {Edit, Lock, Assignment} from '@material-ui/icons';
 
 const styles = theme => ({
     root: { display: 'flex', flexWrap: 'wrap', transformOrigin: 'center bottom'},
@@ -32,6 +27,7 @@ class ActionButtonForSuperAdmin extends React.Component {
     }
     handleEditAccountClick = () => {
         this.setState({ anchorEl: null });
+        console.log('this.props.accountid',this.props.accountid)
         this.props.handleEditAccountClick(this.props.accountid);
     }
     handleClose = () => {
@@ -57,9 +53,9 @@ class ActionButtonForSuperAdmin extends React.Component {
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}
                 >
-                    <MenuItem onClick={this.handleEditAccountClick} className={classes.borderBottom+" "+classes.liCommon}><EditIcon className={classes.btnIcon}/>Edit Account</MenuItem>
-                    {(this.props.status == 1 ? <MenuItem onClick={this.handleLockAccountClick} className={classes.borderBottom+" "+classes.liCommon}><LockIcon className={classes.btnIcon}/>Lock Account</MenuItem> : "")}
-                    {(this.props.status == 2 ? <MenuItem onClick={this.handleUnlockAccountClick} className={classes.borderBottom+" "+classes.liCommon}><AssignmentIcon className={classes.btnIcon}/>Unlock Account</MenuItem> : "")}
+                    <MenuItem onClick={this.handleEditAccountClick} className={classes.borderBottom+" "+classes.liCommon}><Edit className={classes.btnIcon}/>Edit Account</MenuItem>
+                    {(this.props.status == 1 ? <MenuItem onClick={this.handleLockAccountClick} className={classes.borderBottom+" "+classes.liCommon}><Lock className={classes.btnIcon}/>Lock Account</MenuItem> : "")}
+                    {(this.props.status == 2 ? <MenuItem onClick={this.handleUnlockAccountClick} className={classes.borderBottom+" "+classes.liCommon}><Assignment className={classes.btnIcon}/>Unlock Account</MenuItem> : "")}
 
                 </Menu>
             </div>

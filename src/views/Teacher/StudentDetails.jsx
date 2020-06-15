@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard, faDatabase , faUserEdit, faAt, faAudioDescription } from '@fortawesome/free-solid-svg-icons';
 import Button from '@material-ui/core/Button';
 import StudentProfile from './StudentProfile'
-import StudentRegistration from "./StudentRegistration";
+import StudentRegistration from "./RegisterStudent/StudentRegistration";
 import LogBook from "../Logbook/Logbook"
 import AuthenticatedPage from "../AuthenticatedPage";
-import CreateResult from './CreateResult';
-import CreateAttendance from './CreateAttendance';
+import CreateResult from './StudentResult/Result';
+import CreateAttendance from './MonthlyAttendance/CreateAttendance';
 
 const styles = theme => ({
     pendingStatus: { color: "#00aacb" },
