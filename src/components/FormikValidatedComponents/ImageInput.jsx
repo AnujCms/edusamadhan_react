@@ -108,7 +108,7 @@ export default function ({ field, form, name,  authenticatedApiCall, error, onCh
 							onClose={handleClose}
 						>
 							<MenuItem onClick={handleOpenDialog}>Change Photo</MenuItem>
-							<MenuItem onClick={handleRemovePic}>Remove Photo</MenuItem>
+							{/* <MenuItem onClick={handleRemovePic}>Remove Photo</MenuItem> */}
         
       </Menu>
         </div> :
@@ -123,7 +123,7 @@ export default function ({ field, form, name,  authenticatedApiCall, error, onCh
 					onClose={handleClose}
 				>
 					<MenuItem onClick={handleOpenDialog}>Change Photo</MenuItem>
-					<MenuItem onClick={handleRemovePic}>Remove Photo</MenuItem>
+					{/* <MenuItem onClick={handleRemovePic}>Remove Photo</MenuItem> */}
 				</Menu>
 			</div> :
             <img src={defaultsrc} className={classes.defaultImage} onClick={handleOpenDialog} />}

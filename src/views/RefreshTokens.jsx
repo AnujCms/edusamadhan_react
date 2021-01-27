@@ -7,7 +7,7 @@ export default function getNewToken()
     {
       refreshingPromise = axios({
         method: 'post',
-        url: '/api/admin/providerauthservice/accessTokenByRefershToken',
+        url: '/api/providerauthservice/accessTokenByRefershToken',
         data: { refreshToken: localStorage.getItem("refreshToken") }
       });
       let refreshResult = await refreshingPromise;

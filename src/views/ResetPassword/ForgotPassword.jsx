@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import CardFooter from "../../components/Card/CardFooter.jsx";
 import { Link } from 'react-router-dom'
-import { withStyles, Button, InputAdornment, Typography } from '@material-ui/core';
+import { withStyles, Button, Typography } from '@material-ui/core';
 import FormikTextField from '../../components/FormikValidatedComponents/TextField';
 import axios from 'axios';
 import { Formik, Form, Field,connect } from 'formik';
 import { string, object } from 'yup';
-import { withTranslation } from 'react-i18next';
 import { Helmet } from "react-helmet";
 import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
@@ -22,7 +21,6 @@ const styles = theme => ({
     },
     fontSize16: { fontSize: "18px !important", color:"rgba(109, 111, 123, 1)" },
     padTop0: { padding: 0 },
-    rememberText: { fontSize: "16px !important", textAlign: "center" },
     invalidUser: {
         color: 'red'
     },
@@ -39,20 +37,20 @@ const styles = theme => ({
 class ForgetPassword extends Component {
     constructor(props) {
         super(props);
-        const { t } = props;
         this.yupSchema = object().shape({
-            email: string().required("This field is required.").email("Enter proper emailid.")
+            emailId: string().required("This field is required.").email("Enter proper emailid.")
         })
+        this.feildVariables = { emailId: "" };
         this.state = {
-            resetpasswordmsg: false, popUpMsg: '', emailRegistered: "",emailid:""
+            resetpasswordmsg: false, emailRegistered: "",emailId:""
         }
     }
 
     handleSubmit = (values, { setSubmitting }) => {
-        axios.post('/api/providerauthservice/forgotPassword', { emailid: values.email }
+        axios.post('/api/providerauthservice/forgotPassword', { emailId: values.emailId }
         ).then(result => {
             if (result.data.status === 1) {
-                this.setState({ resetpasswordmsg: true, emailid: values.email });
+                this.setState({ resetpasswordmsg: true, emailId: values.emailId });
                 setSubmitting(false);
             }
             else if (result.data.status === 0) {
@@ -68,7 +66,7 @@ class ForgetPassword extends Component {
         this.setState({ resetpasswordmsg: false });
     }
     dismissDialog = () => {
-        this.props.history.push(`../login`)
+        this.props.history.push(`./public/teachers`)
     }
     render() {
         const { classes, t } = this.props;
@@ -77,14 +75,14 @@ class ForgetPassword extends Component {
                 <Helmet>
                     <title>Forgot Password</title>
                 </Helmet>
-                {(!this.state.resetpasswordmsg ? <Formik initialValues={{ email: "" }} onSubmit={this.handleSubmit} validationSchema={this.yupSchema}
+                {(!this.state.resetpasswordmsg ? <Formik initialValues={this.feildVariables} onSubmit={this.handleSubmit} validationSchema={this.yupSchema}
                 >
                     {(props) => (
                         <Form className={classes.root}>
                             <Typography className={classes.passwordTitle}>Forgot your password?</Typography>
                             <p className={classes.fontSize16}>Don't worry, it happens to the best of us. To reset your password, enter the email address you use to sign in to EDUSAMADHAN</p>
                             <Field
-                                name="email"
+                                name="emailId"
                                 fullWidth
                                 label="Email Id"
                                 placeholder="Enter your Email Id"
@@ -120,4 +118,4 @@ class ForgetPassword extends Component {
     }
 }
 
-export default withTranslation()(withStyles(styles)(connect(ForgetPassword)));
+export default withStyles(styles)(connect(ForgetPassword));

@@ -1,73 +1,46 @@
 import React from 'react';
-import Divider from '@material-ui/core/Divider';
-import { Dialog, DialogActions, DialogContent, Typography, DialogTitle, IconButton } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import { withStyles, Dialog, Divider, DialogContent, DialogActions, Typography } from '@material-ui/core';
+import FormHeader from './FormHeader';
+import CheckIcon from '@material-ui/icons/Check';
+import HelpIcon from '@material-ui/icons/Help';
 
-const CustomDialogTitle = withStyles(theme => ({
-    root: {
-        width:"600px",
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        margin: 0,
-        padding: "25px",
-    },
-    closeButton: {
-        position: 'absolute',
-        right: theme.spacing.unit,
-        top: theme.spacing.unit,
-        color: theme.palette.grey[500],
-    },
-    Modal1:
-    {
-        maxWidth: "1000px"
-    }
-}))(props => {
-    const { children, classes, onClose } = props;
-    return (
-        <DialogTitle disableTypography className={classes.root}>
-            <Typography variant="h6">{children}</Typography>
-            {onClose ? (
-                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </DialogTitle>
-    );
+const styles = theme => ({
+    btnIcon: { textAlign: "center", fontSize: "100px", marginRight: "10px", color: 'green', [theme.breakpoints.down('sm')]: { fontSize: "50px" } },
+    textStyle: { fontSize: "25px", color: "green" },
+    btnStyle: { padding: "20px" }
 });
 
 class SuccessDialog extends React.Component {
-    state = {
-        scroll: 'body',
-        selecteddays: '',
-        bgdata: [],
-        patientId: '',
-    };
+    state = { scroll: 'body' };
 
     render() {
+        const { classes } = this.props;
         return (
             <Dialog
-                onClose={this.props.dismiss}
-                scroll={this.state.scroll}
+                fullWidth={true}
+                maxWidth={'sm'}
+                scroll="body"
                 open={true}
-                disableBackdropClick
-                aria-labelledby="customized-dialog-title"
-                maxWidth='sm'
-            >
-                <CustomDialogTitle id="customized-dialog-title" onClose={this.props.dismiss}>
-                {this.props.HeaderText}
-                </CustomDialogTitle>
-                <DialogContent>
-               {this.props.BodyText}
+                onClose={this.props.close}
+                style={{ overflow: "visible" }}
+                aria-labelledby="form-dialog-title">
+
+                <FormHeader headerText={this.props.HeaderText} />
+                <DialogContent style={{ textAlign: "center" }}>
+                    {this.props.isConfirm ? <HelpIcon className={classes.btnIcon} /> :
+                        <CheckIcon className={classes.btnIcon} />}
+                    <br></br>
+                    <Typography className={classes.textStyle}>{this.props.BodyText}</Typography>
                 </DialogContent>
-                <Divider/>
-                <DialogActions>
-                {this.props.successButton.map((button,i)=>
-                  <div key={i}><div>{button}</div></div>
-                    )}  
+                <Divider />
+                <DialogActions className={classes.btnStyle}>
+                    {this.props.successButton.map((button, i) =>
+                        <div key={i}><div>{button}</div></div>
+                    )}
                 </DialogActions>
             </Dialog>
         );
     }
 }
 
-export default SuccessDialog;
+export default withStyles(styles)(SuccessDialog);

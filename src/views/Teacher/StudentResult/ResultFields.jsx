@@ -8,31 +8,45 @@ const styles = theme => ({
 });
 const ResultFields = (props) => {
     const { classes } = props;
-    const handleGrade = (index, event) =>{
-        let dataIndex = index.target.name.split('.')
-        let gradeIndex = parseInt(dataIndex[1]);
-        let obtainedMarks = parseInt(index.target.value)
-        let TotalMarks = parseInt(props.formik.values.subjectResultArray[gradeIndex].theoryTotalMarks)
-        let percentage = Math.round((obtainedMarks * 100) / TotalMarks);
+    const handleCalculateGrade = (totalObtainedMarks, totalMarks, gradeIndex) => {
+        let percentage = Math.round((totalObtainedMarks * 100) / totalMarks);
         let grade = ""
-        if(percentage>90){
+        if (percentage > 90) {
             grade = "A1"
-        }else if(percentage>80){
+        } else if (percentage > 80) {
             grade = "A2"
-        }else if(percentage>70){
+        } else if (percentage > 70) {
             grade = "B1"
-        }else if(percentage>60){
+        } else if (percentage > 60) {
             grade = "B2"
-        }else if(percentage>50){
+        } else if (percentage > 50) {
             grade = "C1"
-        }else if(percentage>40){
+        } else if (percentage > 40) {
             grade = "C2"
-        }else if(percentage>30){
+        } else if (percentage > 30) {
             grade = "D"
-        }else{
+        } else {
             grade = "E"
         }
         props.formik.setFieldValue(`subjectResultArray.${gradeIndex}.grade`, grade, false)
+    }
+    const handlePracticalMarksChange = (index, event) => {
+        let dataIndex = index.target.name.split('.')
+        let gradeIndex = parseInt(dataIndex[1]);
+        if (props.formik.values.subjectResultArray[gradeIndex].theoryTotalMarks && props.formik.values.subjectResultArray[gradeIndex].theoryObtainMarks && props.formik.values.subjectResultArray[gradeIndex].practicalTotalMarks) {
+            let totalMarks = parseInt(props.formik.values.subjectResultArray[gradeIndex].theoryTotalMarks) + parseInt(props.formik.values.subjectResultArray[gradeIndex].practicalTotalMarks)
+            let totalObtainedMarks = parseInt(props.formik.values.subjectResultArray[gradeIndex].theoryObtainMarks) + parseInt(index.target.value)
+            handleCalculateGrade(totalObtainedMarks, totalMarks, gradeIndex)
+        }
+    }
+    const handleTheoryMarksChange = (index, event) => {
+        let dataIndex = index.target.name.split('.')
+        let gradeIndex = parseInt(dataIndex[1]);
+        if (props.formik.values.subjectResultArray[gradeIndex].theoryTotalMarks && props.formik.values.subjectResultArray[gradeIndex].practicalObtainMarks && props.formik.values.subjectResultArray[gradeIndex].practicalTotalMarks) {
+            let totalMarks = parseInt(props.formik.values.subjectResultArray[gradeIndex].theoryTotalMarks) + parseInt(props.formik.values.subjectResultArray[gradeIndex].practicalTotalMarks)
+            let totalObtainedMarks = parseInt(props.formik.values.subjectResultArray[gradeIndex].practicalObtainMarks) + parseInt(index.target.value)
+            handleCalculateGrade(totalObtainedMarks, totalMarks, gradeIndex)
+        }
     }
     return (
         <>
@@ -59,9 +73,9 @@ const ResultFields = (props) => {
                     <Field
                         variant="filled"
                         type="number"
+                        onChange={(props, e) => { handleTheoryMarksChange(props, e) }}
                         label="Theory Obtained Marks"
                         name={`subjectResultArray.${props.index}.theoryObtainMarks`}
-                        onChange={(props,e) => { handleGrade(props, e) }}
                         component={FormikTextField}
                     />
                 </Grid>
@@ -79,6 +93,7 @@ const ResultFields = (props) => {
                         variant="filled"
                         type="number"
                         label="Practical Obtained Marks"
+                        onChange={(props, e) => { handlePracticalMarksChange(props, e) }}
                         name={`subjectResultArray.${props.index}.practicalObtainMarks`}
                         component={FormikTextField}
                     />

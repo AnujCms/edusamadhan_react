@@ -1,37 +1,26 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Card, Grid, Paper, Typography, Table, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { withStyles, Card, Grid, Paper, Table, TableCell, TableHead, TableRow } from '@material-ui/core';
 import AuthenticatedPage from "../AuthenticatedPage";
 import { connect } from 'formik';
+import { handleDaysName } from '../../components/utilsFunctions';
+import FormHeader from '../../components/FormHeader';
 
 const styles = (theme) => ({
-    paddingBottom: { padding: "15px", [theme.breakpoints.down('md')]: { paddingTop:"15px",paddingLeft: "0px" } },
+    paddingBottom: { padding: "15px", [theme.breakpoints.down('md')]: { paddingTop: "15px", paddingLeft: "0px" } },
     questionContainer: { display: "flex", alignItems: "center", flexDirection: "row", marginBottom: "15px" },
     backgroundColor: { background: theme.palette.formcolor.backgroundFullPage, width: "100%", overflowX: 'auto' },
     container: { display: 'flex', flexWrap: 'wrap' },
-    textField: { marginLeft: theme.spacing(1), marginRight: theme.spacing(1), width: 200 },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
     tableHeading: { border: '1px solid #000', height: '30px', textAlign: 'left' }
 });
-const weekDaysOptions = [{ value: 1, label: "Monday" }, { value: 2, label: "Tuesday" }, { value: 3, label: "Wednesday" }, { value: 4, label: "Thursday" }, { value: 5, label: "Friday" }, { value: 6, label: "Saturday" }]
 
 class TimeTableView extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            subjectsArray: [], teachersArray: [], periodArray: [], daysArray: [], periodCountArray: [], mondayArray: [], tuesdayArray: [], wednesdayArray: [], thursdayArray: [], fridayArray: [], saturdayArray: []
+            periodArray: [], daysArray: [], periodCountArray: [], mondayArray: [], tuesdayArray: [], wednesdayArray: [], thursdayArray: [], fridayArray: [], saturdayArray: []
         }
     }
-    handleDaysName = (value) => {
-        let dayName = ''
-        weekDaysOptions.map((item) => {
-            if (item.value === value) {
-                dayName = item.label;
-            }
-        })
-        return dayName;
-    }
+
     filterDayWiseData = (value) => {
         let daysObject = []
         if (value.period1 !== null) {
@@ -110,7 +99,7 @@ class TimeTableView extends React.Component {
         if (this.props.timeTableData) {
             let daysArray = [];
             this.props.timeTableData.map((item) => {
-                daysArray.push(this.handleDaysName(item.dayname))
+                daysArray.push(handleDaysName(item.dayname))
                 if (item.dayname === 1) {
                     this.setState({ mondayArray: this.filterDayWiseData(item) });
                 }
@@ -137,9 +126,7 @@ class TimeTableView extends React.Component {
         const { classes } = this.props;
         return (
             <>
-                <Paper className={classes.formHeader}>
-                    <Typography className={classes.center}>View TimeTable</Typography>
-                </Paper>
+                <FormHeader headerText={"View TimeTable"} pageTitle={"View TimeTable"} />
                 <Paper>
                     <Card className={classes.backgroundColor}>
                         <Grid container className={classes.questionContainer}>
@@ -205,4 +192,4 @@ class TimeTableView extends React.Component {
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("Principal")(connect(TimeTableView)));
+export default withStyles(styles)(AuthenticatedPage()(connect(TimeTableView)));

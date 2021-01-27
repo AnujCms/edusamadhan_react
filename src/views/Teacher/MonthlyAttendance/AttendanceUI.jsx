@@ -11,9 +11,9 @@ import FormikRadioGroup from '../../../components/FormikValidatedComponents/Form
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 11,
+        margin: theme.spacing(2),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(11),
         [theme.breakpoints.down('md')]: { margin: 0, marginTop: 0 },
     },
     formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
@@ -112,4 +112,4 @@ class AttendanceUI extends React.Component {
         );
     }
 }
-export default withStyles(styles)(AuthenticatedPage("Principal")(WithAccount(connect(AttendanceUI))));
+export default withStyles(styles)(AuthenticatedPage()(WithAccount(connect(AttendanceUI))));

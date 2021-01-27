@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
 import { withStyles, Avatar, Paper, Grid } from '@material-ui/core';
-import ActionButton from '../../components/LogbookForSuperAdmin';
+import ActionButton from './ActionButtonForLogbook';
 import MuiThemeDataTable from '../../components/MuiThemeDataTable';
 import GridContainer from "../../components/Grid/GridContainer.jsx";
 import GridItem from "../../components/Grid/GridItem.jsx";
@@ -10,13 +10,14 @@ import { Helmet } from "react-helmet";
 import FormikSelect from '../../components/FormikValidatedComponents/SelectFieldWithLabel';
 import { Formik, Form, Field } from 'formik';
 import WithSuperAdminDashboard from '../Context/WithSuperAdminDashboard';
+import { handleGenderLabel, handleReligionLabel, handleMediumLabel, handleCategoryLabel, handleLocalityLabel } from '../../components/utilsFunctions';
 
 const styles = theme => ({
     root: {
-        marginTop: theme.spacing.unit * 3,
-        ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 1,
-        paddingBottom: theme.spacing.unit * 1,
+        margin: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(10),
+        [theme.breakpoints.down('md')]: { margin: 0 },
     },
     topM:{marginTop:"15px"},
     paddingBottom: { padding: "10px" },
@@ -48,15 +49,6 @@ class StudentList extends React.Component {
             }
         },
         {
-            name: "roll",
-            label: "AAdhar Number",
-            options: {
-                filter: false,
-                sort: false,
-                searchable: true
-            }
-        },
-        {
             name: "name",
             label: "Name",
             options: {
@@ -68,9 +60,17 @@ class StudentList extends React.Component {
                 }
             }
         },
-
         {
-            name: "mothername",
+            name: "aadharNumber",
+            label: "AAdhar Number",
+            options: {
+                filter: false,
+                sort: false,
+                searchable: true
+            }
+        },
+        {
+            name: "motherName",
             label: "Mother",
             options: {
                 filter: false,
@@ -79,7 +79,7 @@ class StudentList extends React.Component {
             }
         },
         {
-            name: "fathername",
+            name: "fatherName",
             label: "Father",
             options: {
                 filter: false,
@@ -88,7 +88,7 @@ class StudentList extends React.Component {
             }
         },
         {
-            name: "cellnumber",
+            name: "cellNumber",
             label: "Mobile",
             options: {
                 filter: false,
@@ -96,15 +96,15 @@ class StudentList extends React.Component {
                 searchable: true
             }
         },
-        // {
-        //     name: "dob",
-        //     label: "Birth Date",
-        //     options: {
-        //         filter: false,
-        //         sort: false,
-        //         searchable: true
-        //     }
-        // },
+        {
+            name: "dob",
+            label: "Birth Date",
+            options: {
+                filter: false,
+                sort: false,
+                searchable: true
+            }
+        },
         {
             name: "gender",
             label: "Gender",
@@ -142,6 +142,15 @@ class StudentList extends React.Component {
             }
         },
         {
+            name: "busService",
+            label: "Bus",
+            options: {
+                filter: true,
+                sort: true,
+                searchable: true
+            }
+        },
+        {
             name: "Action",
             label: "Action",
             options: {
@@ -162,7 +171,6 @@ class StudentList extends React.Component {
     async componentDidMount() {
         let contextData = this.props.selectedSchoolAndTeacher.teacherDetails.teacherState;
         if(contextData){
-            console.log(contextData)
             this.setState({students:contextData.students, selectedAccount:contextData.selectedAccount, teacherArray:contextData.teacherArray})
             this.fieldVariables.selectedAccount = contextData.selectedAccount
             this.fieldVariables.selectedTeacher = contextData.selectedTeacher
@@ -170,7 +178,7 @@ class StudentList extends React.Component {
         let response = await this.props.authenticatedApiCall('get', '/api/superadminservice/all', null)
         if (response.data.status == 1) {
             let labelsArray = response.data.statusDescription.map((item) => {
-                return { value: item.accountid, label: item.accountname }
+                return { value: item.accountId, label: item.accountName }
             });
             this.setState({ accounts: labelsArray })
         }
@@ -181,35 +189,29 @@ class StudentList extends React.Component {
         let response = await this.props.authenticatedApiCall('get', url, null)
         if (response.data.status == 1) {
             let labelsArray = response.data.statusDescription.map((item) => {
-                return { value: item.userid, label: item.firstname +" "+ item.lastname }
+                return { value: item.userId, label: item.firstName +" "+ item.lastName }
             });
             this.setState({selectedAccount: selectedValue, teacherArray: labelsArray })
+        }else if(response.data.status == 0){
+            this.setState({ teacherArray: [] })
         }
     };
 
     handleTeacherChange = async (selectedValue) => {
-        console.log(this.state.selectedAccount,selectedValue)
         let url = "/api/superadminservice/" + this.state.selectedAccount.value + "/" + selectedValue.value + "/students";
         let response = await this.props.authenticatedApiCall('get', url, null)
         if (response.data.status == 1) {
             response.data.statusDescription.forEach((item) => {
-                item.name = item.lastname + " " + item.firstname;
+                item.name = item.lastName + " " + item.firstName;
 
-                item.Action = { studentid: item.studentid, studentName: item.name }
-                if (item.religion === 1) { item.religion = 'Hindu' }
-                else if (item.religion === 2) { item.religion = 'Muslim' }
-                else if (item.religion === 3) { item.religion = 'Shikh' }
-                else if (item.religion === 4) { item.religion = 'Jain' }
-
-                if (item.category === 1) { item.category = 'Genral' }
-                else if (item.category === 2) { item.category = 'OBC' }
-                if (item.category === 3) { item.category = 'ST/SC' }
-
-                if (item.locality === 1) { item.locality = 'Urban' }
-                else if (item.locality === 2) { item.locality = 'Rural' }
-
-                if (item.gender == 1) { item.gender = "Female" }
-                else if (item.gender == 2) { item.gender = "Male" }
+                item.Action = { studentId: item.studentId, studentName: item.name }
+                item.locality = handleLocalityLabel(item.locality)
+                item.category = handleCategoryLabel(item.category)
+                item.gender = handleGenderLabel(item.gender)
+                item.religion = handleReligionLabel(item.religion)
+                item.mediumType = handleMediumLabel(item.mediumType)
+                if(item.busService == 1){ item.busService = "No"}
+                else if(item.busService == 2){ item.busService = "Yes"}
             });
             this.setState({
                 selectedTeacher: selectedValue, students: response.data.statusDescription },() => this.props.selectedSchoolAndTeacher.changeTeacherSelection({
@@ -278,4 +280,4 @@ class StudentList extends React.Component {
     }
 }
 
-export default withStyles(styles)(WithSuperAdminDashboard(AuthenticatedPage("SuperAdmin")(StudentList)));
+export default withStyles(styles)(WithSuperAdminDashboard(AuthenticatedPage()(StudentList)));

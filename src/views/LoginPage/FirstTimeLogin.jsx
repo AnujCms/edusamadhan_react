@@ -7,9 +7,8 @@ import Card from "../../components/Card/Card.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
 import CardFooter from "../../components/Card/CardFooter.jsx";
 import { Formik, Form, Field } from 'formik';
-import { string, object, boolean, ref } from 'yup';
+import { string, object, ref } from 'yup';
 import FormikTextField from '../../components/FormikValidatedComponents/TextField';
-import { withTranslation } from 'react-i18next';
 import GridContainer from '../../components/Grid/GridContainer';
 import GridItem from '../../components/Grid/GridItem';
 import { Helmet } from "react-helmet";
@@ -28,11 +27,7 @@ const styles = theme => ({
     fntSz_16: { fontSize: "16px" },
     loginSuccess: { fontSize: "18px", fontWeight: "500", marginBottom: "15px" },
     login: { width: "410px", marginLeft: "37%", marginTop: "11%", [theme.breakpoints.down('md')]: { marginLeft: 0, paddingTop: '15px' } },
-    padTop: { padding: "0 40px", paddingTop: "40%", color: "#fff" },
-    clrWhite: { color: "#fff !important", },
-    fntSze20: { fontSize: "18px !important" },
     LoginHeading: { fontSize: "30px !important", fontWeight: "900 !important", color: "rgba(0, 0, 102, 1) !important" },
-    LoginSubHeading: { fontSize: "18px !important", color: "rgba(109, 111, 123, 1)  !important", textAlign: "left", lineHeight: "24px  !important" },
     cardFooter: { justifyContent: "flex-end", padding: 0, margin: "30px 0 20px" },
     icnColor: { cursor: "pointer" },
     inputItem: { width: "100%", marginBottom: "15px", [theme.breakpoints.down('md')]: { width: "90%" } },
@@ -44,13 +39,13 @@ const styles = theme => ({
 class FirstTimeLogin extends React.Component {
     constructor(props) {
         super(props)
-        const { t } = this.props;
         this.formikValidation = object().shape({
             password: string().required("This fiels is required.").min(8, "Password must be 8 character log.").matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#_?&^+=-])[A-Za-z\d$@$!%*#_?&^+=-]{8,}$/, "Passqord condition."),
-            cnfpassword: string().required("This fiels is required.").oneOf([ref('password')], "Confirm password is not matching."),
+            cnfPassword: string().required("This fiels is required.").oneOf([ref('password')], "Confirm password is not matching."),
         });
+        this.fieldVariables = { password: "", cnfPassword: "", acceptTerms: false, termCondition: false }
         this.state = {
-            resetPassworSuccess: true, language: this.props.i18n.language, unauthenticated: false,
+            resetPassworSuccess: true, unauthenticated: false,
             password: "password", showPassword: true, confPassword: "password", showCnfPassword: true
         }
     }
@@ -61,11 +56,10 @@ class FirstTimeLogin extends React.Component {
         }
     }
     handleSubmit = async (values, { setSubmitting }) => {
-        await this.props.authenticatedApiCall('post', '/api/providerauthservice/changePassword', {
+        await this.props.authenticatedApiCall('post', '/api/providerauthservice/firsttimeChangePassword', {
             password: values.password,
-            cnfpassword: values.cnfpassword
+            cnfPassword: values.cnfPassword
         }).then(response => {
-            console.log("response", response)
             setSubmitting(false);
             if (response.data.status === 1) {
                 localStorage.removeItem("accessToken");
@@ -77,13 +71,12 @@ class FirstTimeLogin extends React.Component {
         }).catch((error) => {
             this.setState({ unauthenticated: true })
             setSubmitting(false);
-            console.log(error);
         });
     }
     //handle dismissDialog
     dismissDialog = () => {
         this.setState({ resetPassworSuccess: true });
-        this.props.history.replace(`../login`)
+        this.props.history.replace(`../public/teachers`)
     }
     logout = async () => {
         localStorage.removeItem("__warningPopShownForSession")
@@ -134,11 +127,11 @@ class FirstTimeLogin extends React.Component {
                         FirstTimeLogin
                     </title>
                 </Helmet>
-                <div key={this.props.i18n.language}>
+                <div >
                     <GridContainer style={{ backgroundColor: "#fff", marginBottom: "25px" }}>
                         <GridItem lg={12} md={12} sm={12} xs={12}>
                             <div className={classes.login}>
-                                {(this.state.resetPassworSuccess ? <Formik initialValues={{ password: "", cnfpassword: "", acceptTerms: false, termCondition: false, acceptTerms:false }} onSubmit={this.handleSubmit} validationSchema={this.formikValidation}
+                                {(this.state.resetPassworSuccess ? <Formik initialValues={this.fieldVariables} onSubmit={this.handleSubmit} validationSchema={this.formikValidation}
                                 >
                                     {(props) => (
                                         <Form>
@@ -165,7 +158,7 @@ class FirstTimeLogin extends React.Component {
                                                 component={FormikTextField}
                                                 label="Confirm your password."
                                                 fullWidth
-                                                name="cnfpassword"
+                                                name="cnfPassword"
                                                 variant="filled"
                                                 className={classes.inputItem + " " + "selectstyle"}
                                                 InputProps={{
@@ -190,7 +183,7 @@ class FirstTimeLogin extends React.Component {
                                             />
                                             <div>
                                                 <div style={{ textAlign: "center", marginBottom: "30px" }}> <br /><br />
-                                                    <Button disabled={!props.values.acceptTerms } type="submit" className={classes.primaryBtn} size="small" > Confirm </Button>
+                                                    <Button disabled={!props.values.acceptTerms} type="submit" className={classes.primaryBtn} size="small" > Confirm </Button>
                                                 </div>
                                             </div>
                                         </Form>
@@ -219,4 +212,4 @@ class FirstTimeLogin extends React.Component {
     }
 }
 
-export default withTranslation()(AuthenticatedPage()(withStyles(styles, { withTheme: true })(FirstTimeLogin)));
+export default AuthenticatedPage()(withStyles(styles, { withTheme: true })(FirstTimeLogin));

@@ -10,7 +10,7 @@ const styles = theme => ({
 
     },
     paper: {
-        marginRight: theme.spacing.unit * 2,
+        marginRight: theme.spacing(2),
         backgroundColor: "#fff"
         
     },

@@ -6,10 +6,10 @@ import ErrorDialog from '../../components/ErrorDialog';
 const monthOptions = [{ value: 1, label: 'January' }, { value: 2, label: 'February' }, { value: 3, label: 'March' }, { value: 4, label: 'April' }, { value: 5, label: 'May' }, { value: 6, label: 'June' }, { value: 7, label: 'July' }, { value: 8, label: 'August' }, { value: 9, label: 'September' }, { value: 10, label: 'October' }, { value: 11, label: 'November' }, { value: 12, label: 'December' }]
 const styles = theme => ({
     root: {
-        marginTop: theme.spacing.unit * 12,
+        marginTop: theme.spacing(12),
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 1,
-        paddingBottom: theme.spacing.unit * 1,
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
     },
     tableHeading: { border: '1px solid #000', height: '30px', textAlign: 'center' },
     OkButton: { backgroundColor: "#db6336", borderRadius: "15px", fontSize: "12px", color: "#fff", padding: "10px", width: "100px" },
@@ -123,4 +123,4 @@ class Attendance extends React.Component {
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage(['Student'])(Attendance));
+export default withStyles(styles)(AuthenticatedPage()(Attendance));

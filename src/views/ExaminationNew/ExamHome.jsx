@@ -14,7 +14,7 @@ const styles = theme => ({
     CustomAlgoBtn: { textTransform: "capitalize", padding: "5px 15px" },
     headPop: { float: "right", color: "#001C61", margin: "0 10px", '&:hover': { background: "transparent" } },
     simpleMenu: { minWidth: "inherit !important" },
-    formControl: { margin: theme.spacing.unit, minWidth: 120 },
+    formControl: { minWidth: 120 },
     selectLink:{ float:"right", color:"#001C61", fontWeight: "bold !important", lineHeight:600, margin:"30px 100px"},
     borderBottom:{fontSize:"16px", borderBottom:"1px solid rgba(218, 223, 224, 1)"},
     btnIcon: { fontSize: 18, marginRight:"10px"}
@@ -60,11 +60,11 @@ class ExamHome extends React.Component {
                     onClick={this.handleClick}
                     className={classes.headPop}
                 >
-                    <p style={{ marginRight: "15px" }}>{this.props.currentUser.userDetails.firstname} </p>
+                    <p style={{ marginRight: "15px", color:'green', fontWeight:600 }}>{this.props.currentUser.userDetails.firstName} </p>
                     <Avatar alt="No Images" src={isImage ? ("data:image/jpeg;base64," + this.props.currentUser.userDetails.image) : TeacherImage} className={this.props.classes.avatar} />
                 </Button>,
                 <div className={classes.selectLink + " " + classes.formControl}>
-                    <Typography variant="h6">{this.props.currentUser.userDetails.accountname}</Typography>
+                    <Typography variant="h6">{this.props.currentUser.userDetails.accountName}</Typography>
                 </div>,
                 <Menu className={classes.root}
                     id="simple-menu"

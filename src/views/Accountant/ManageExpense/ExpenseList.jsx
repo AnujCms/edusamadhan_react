@@ -1,25 +1,26 @@
 import React from 'react';
 import AuthenticatedPage from "../../AuthenticatedPage";
 import { withStyles, Button, Grid, Typography } from '@material-ui/core';
-import ActionButtonForExpense from '../ActionButtonForExpense';
+import ActionButtonForExpense from './ActionButtonForExpense';
 import { WithAccount } from '../../AccountContext';
 import MuiThemeDataTable from '../../../components/MuiThemeDataTable';
 import SuccessDialog from '../../../components/SuccessDialog';
 import ErrorDialog from '../../../components/ErrorDialog';
 import { Helmet } from "react-helmet";
+import queryString from 'query-string';
+import { formatDate } from '../../../components/utilsFunctions';
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit * 3,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 9,
+        margin: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(9),
         [theme.breakpoints.down('md')]: { margin: 0 },
     },
     pad0: { padding: 0 },
     evenetsTitle: { fontWeight: 500, marginLeft: "5px", marginTop: "15px" },
     cstmprotoBtnWrap: { margin: "10px 0", textAlign: "right", [theme.breakpoints.down('md')]: { textAlign: "left" } },
     primaryBtn: { color: theme.palette.text.textPrimaryColor, backgroundColor: theme.palette.primary.main, textTransform: "uppercase", border: "1px solid " + theme.palette.border.primaryBorder, borderRadius: "50px", margin: "8px 0", textAlign: "right", padding: "7px 15px", '&:hover': { backgroundColor: theme.palette.hoverPrimaryColor.main, color: theme.palette.text.hoverTextPrimaryColor, border: "1px solid " + theme.palette.border.hoverPrimaryBorder } },
-
     GridContainer: { marginTop: "20px", [theme.breakpoints.down('md')]: { marginTop: "5px" } },
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
 });
@@ -30,11 +31,10 @@ class ExpenseList extends React.Component {
         this.state = {
             feeDetails: [], isError: false, errorMessage: '', isSuccess: false, successMessage: ''
         };
-        this.vehicleOptions = [{ value: 1, label: "Bus" }, { value: 2, label: "Van" }, { value: 3, label: "Car" }, { value: 4, label: "Auto" }]
     }
     tableheads1 = [
         {
-            name: "expensedetailsid",
+            name: "expenseId",
             label: "Id",
             options: {
                 filter: false,
@@ -43,11 +43,11 @@ class ExpenseList extends React.Component {
             }
         },
         {
-            name: "expense",
+            name: "expenseName",
             label: "Expense",
             options: {
                 filter: false,
-                sort: false,
+                sort: true,
                 searchable: false,
                 customBodyRender: (value) => {
                     return <p><b>{value}</b></p>
@@ -55,20 +55,20 @@ class ExpenseList extends React.Component {
             }
         },
         {
-            name: "expenseamount",
+            name: "expenseAmount",
             label: "Expense Amount",
             options: {
                 filter: false,
-                sort: false,
+                sort: true,
                 searchable: false
             }
         },
         {
-            name: "expensedate",
+            name: "expenseDate",
             label: "Expense Date",
             options: {
                 filter: false,
-                sort: false,
+                sort: true,
                 searchable: false
             }
         },
@@ -80,7 +80,7 @@ class ExpenseList extends React.Component {
                 sort: false,
                 print: false,
                 customBodyRender: (value) => {
-                    return (<ActionButtonForExpense expensedetailsid={value.expensedetailsid} handleEditExpense={this.handleEditExpense} handleDeleteExpense={this.handleDeleteExpense}/>)
+                    return (<ActionButtonForExpense expenseId={value.expenseId} handleEditExpense={this.handleEditExpense} handleDeleteExpense={this.handleDeleteExpense}/>)
 
                 }
             }
@@ -89,12 +89,12 @@ class ExpenseList extends React.Component {
     ];
 
     //Edit Expense Details
-    handleEditExpense = (expensedetailsid) => {
-        this.props.history.push('./edit-expense/' + expensedetailsid);
+    handleEditExpense = (expenseId) => {
+        this.props.history.push('./edit-expense/' + expenseId);
     }
     //Delete ExpenseDetails
-    handleDeleteExpense = async (expensedetailsid) =>{
-        let response = await this.props.authenticatedApiCall('delete', '/api/studentfeeservice/deleteexpense/'+expensedetailsid, null)
+    handleDeleteExpense = async (expenseId) =>{
+        let response = await this.props.authenticatedApiCall('delete', '/api/accountantservice/deleteexpense/'+expenseId, null)
         if(response.data.status === 1){
             this.setState({isSuccess:true, successMessage: response.data.statusDescription})
         }else{
@@ -102,29 +102,40 @@ class ExpenseList extends React.Component {
         }
     }
     async componentDidMount() {
-        let url = '/api/studentfeeservice/getexpense';
+        let url = '/api/accountantservice/getexpense';
         let response = await this.props.authenticatedApiCall('get', url, null)
         if (response.data.status == 1) {
             response.data.statusDescription.map((item) => {
-                item.action = { expensedetailsid: item.expensedetailsid }
+                item.action = { expenseId: item.expenseId }
+               item.expenseDate = formatDate(new Date(item.expenseDate));
             });
             this.setState({ feeDetails: response.data.statusDescription })
         } else if (response.data.status == 0) {
             this.setState({ errorMessage: response.data.statusDescription, isError: true })
         }
     };
-
     backDashboard = () => {
-        this.props.history.push(`./manageexpense`)
+        let parsed = {}
+        parsed.reloadTo = 'manageexpense';
+        parsed.timeOut = '100';
+        const stringified = queryString.stringify(parsed);
+        this.props.history.push({
+            pathname: `./formReloader`,
+            search: "?" + stringified
+        });
         this.setState({ isError: false, isSuccess: false })
     }
 
     handleCreateFeeStructure = () =>{
         this.props.history.push('./createexpense')
     }
+    handleClose = () =>{
+        this.setState({isError:false})
+    }
     render() {
         const { classes } = this.props;
         const OkButton = [<Button className={classes.OkButton} onClick={this.backDashboard}>Ok</Button>]
+        const errorOkButton = [<Button className={classes.OkButton} onClick={this.handleClose}>Ok</Button>]
         const HeaderText = "Success"
         return (
             <div className={classes.root}>
@@ -143,11 +154,11 @@ class ExpenseList extends React.Component {
                     </Grid>
                 </Grid>
                     {(this.state.isSuccess ? <SuccessDialog successButton={OkButton} HeaderText={HeaderText} BodyText={this.state.successMessage} dismiss={this.backDashboard} /> : "")}
-                    {(this.state.isError ? <ErrorDialog successButton={OkButton} HeaderText={this.state.errorMessage} dismiss={this.backDashboard} /> : "")}
+                    {(this.state.isError ? <ErrorDialog successButton={errorOkButton} HeaderText={this.state.errorMessage} dismiss={this.handleClose} /> : "")}
             </div >
         );
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("FeeAccount")(WithAccount(ExpenseList)));
+export default withStyles(styles)(AuthenticatedPage()(WithAccount(ExpenseList)));
 

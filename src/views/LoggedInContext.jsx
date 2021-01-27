@@ -7,12 +7,16 @@ const defaultUserObj = {
     studenttype: '',
     accesstoken: "",
     studentid:'',
-    studentname: '',
-    firstname:'',
-    lastname:'',
-    userid:'',
-    accountid:'',
-    configdata:''
+    studentName: '',
+    accountName: '',
+    firstName:'',
+    lastName:'',
+    userId:'',
+    accountId:'',
+    configData:'',
+    userType:'',
+    entranceExamType: '',
+    mediumType: ''
 };
 
 const UserLoggedInContext = React.createContext({

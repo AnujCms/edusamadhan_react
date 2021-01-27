@@ -11,7 +11,6 @@ import { string, object, boolean, ref } from 'yup';
 import FormikTextField from '../../components/FormikValidatedComponents/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { withTranslation } from 'react-i18next';
 import GridContainer from '../../components/Grid/GridContainer';
 import GridItem from '../../components/Grid/GridItem';
 import { Link } from 'react-router-dom';
@@ -58,7 +57,6 @@ const styles = theme => ({
 class ResetPassword extends React.Component {
   constructor(props) {
     super(props)
-    const { t } = this.props;
     this.formikValidation = object().shape({
       password: string().required("This field is required.").min(8, "Password shuold be atleast 8 characters long.").matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#_?&^+=-])[A-Za-z\d$@$!%*#_?&^+=-]{8,}$/, "Password is not correct."),
       cnfpassword: string().required("This field is required.").oneOf([ref('password')], "Password must be equal."),
@@ -69,7 +67,6 @@ class ResetPassword extends React.Component {
         successMessage: "",
       resetPassworSuccess: true,
       invalidToken: "",
-      language: this.props.i18n.language,
       password: "password", showPassword: true, confPassword: "password", showCnfPassword: true
     }
   }
@@ -77,26 +74,21 @@ class ResetPassword extends React.Component {
   handleChange = (name) => event => {
     this.setState({ [name]: event.target.checked, });
   };
-  handleTermCondition = async () => {
-    this.setState({ anchor: null });
-    window.open(this.props.theme.staticContent.termAndPrivacyUrl+`${this.props.i18n.language}_webPrivacyPolicy.pdf`);
-}
+
   handleSubmit = async (values) => {
     const parsed = queryString.parse(this.props.location.search);
-    axios.post('/api/providerauthservice/resetpassword', {
+    axios.post('/api/providerauthservice/resetPassword', {
       token: parsed.reset_token,
       password: values.password,
-      cnfpassword: values.cnfpassword,
-      acceptTerms: values.acceptTerms
+      cnfpassword: values.cnfpassword
     }).then(response => {
       if (response.data.status === 1) {
         this.setState({ resetPassworSuccess: false, successMessage:response.data.statusDescription })
-      } else {
+      } else if(response.data.status === 0) {
         this.setState({ invalidToken: "Token has been expired." })
       }
     })
       .catch(function (error) {
-        console.log(error);
       });
   }
   //handle dismissDialog
@@ -125,7 +117,7 @@ class ResetPassword extends React.Component {
     return (
       <div>
         <Helmet>
-          <title>Re-Set Password </title>
+          <title>Change Password </title>
         </Helmet>
         {(this.state.resetPassworSuccess ? <Formik initialValues={{ password: "", cnfpassword: "", acceptTerms: false }} onSubmit={this.handleSubmit} validationSchema={this.formikValidation}
         >
@@ -205,4 +197,4 @@ class ResetPassword extends React.Component {
   }
 }
 
-export default withTranslation()(withStyles(styles, { withTheme: true })(ResetPassword));
+export default withStyles(styles, { withTheme: true })(ResetPassword);

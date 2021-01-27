@@ -77,11 +77,14 @@ return createMuiTheme({
       hint: "rgba(0, 0, 0, 0.38)"
     },
     formcolor:{
-      backgroundHeader:"#55ACEE",
+      backgroundHeader:"#8B0000",
       textColor:"#fff",
       fontSize: "25px",
       backgroundFullPage:"#ebecf5"
 
+    },
+    minWidthMenu:{
+      minWidthMenu: theme.minWidthMenu
     },
     logbook:{
       logbookFasting:theme.logbookFasting,

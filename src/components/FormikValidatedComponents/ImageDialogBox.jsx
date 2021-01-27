@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         borderBottom: `1px solid ${theme.palette.divider}`,
         margin: 0,
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         width: "600px",
         [theme.breakpoints.down('sm')]: {
             width: "100%"

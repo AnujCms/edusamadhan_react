@@ -19,7 +19,6 @@ getConfig().then(function(configObject)
     
 }).catch(function(err)
 {
-    console.log(err);
     alert('Unable to download config. Fatal error.')
 });
 

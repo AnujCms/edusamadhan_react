@@ -17,7 +17,7 @@ const styles = (theme) => ({
     cancelBtn: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(255, 255, 255, 1)", color: "rgba(75, 123, 227, 1)", borderRadius: "25px", border: "1px solid rgba(0, 0, 0, 0.12)", marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: 0 } },
     createUser: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(75, 123, 227, 1)", color: '#fff', borderRadius: "25px", border: "1px solid " + theme.palette.border.hoverThirdBorder, marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: '10px' } },
     primaryBtn: { color: theme.palette.text.textPrimaryColor, backgroundColor: theme.palette.primary.main, borderRadius: "50px", margin: "8px 23px", textAlign: "right", padding: "6px 17px", fontWeight: "400", lineHeight: "1.42857143", '&:hover': { backgroundColor: theme.palette.primary.main, color: theme.palette.text.hoverTextPrimaryColor } },
-    root: { margin: theme.spacing.unit * 12, paddingBottom: theme.spacing.unit * 1, [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' } },
+    root: { margin: theme.spacing(12), paddingBottom: theme.spacing(1), [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' } },
     questionContainer: { display: "flex", alignItems: "center", flexDirection: "row", marginBottom: "15px" },
     labelContainer: { width: "550px", textAlign: "right", marginRight: "25px", fontSize: "14px", fontFamily: "'Roboto', 'Helvetica Neue, Helvetica, Arial, sans-serif'", fontWeight: "bold", fontWeight: 900, [theme.breakpoints.down('sm')]: { width: "100px" } },
     inputItem: { width: "50%", [theme.breakpoints.down('md')]: { width: '100%' } },
@@ -163,4 +163,4 @@ class ResultTable extends React.Component {
 }
 
 
-export default withStyles(styles)(AuthenticatedPage("Teacher")(ResultTable));
+export default withStyles(styles)(AuthenticatedPage()(ResultTable));

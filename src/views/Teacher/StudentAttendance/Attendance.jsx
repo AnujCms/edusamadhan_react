@@ -1,51 +1,49 @@
 import React from 'react';
 import AuthenticatedPage from "../../AuthenticatedPage";
-import { withStyles, withWidth, Button, Paper } from '@material-ui/core';
-import Card from "../../../components/Card/Card.jsx";
-import Typography from '@material-ui/core/Typography';
+import { withStyles, withWidth, Button, Card, CircularProgress } from '@material-ui/core';
 import SuccessDialog from '../../../components/SuccessDialog';
 import ErrorDialog from '../../../components/ErrorDialog';
 import { Formik, Form, connect } from 'formik';
 import AttendanceSchema from './AttendanceSchema';
 import AttendanceUI from './AttendanceUI';
-import Spinner from '@material-ui/core/CircularProgress';
-import { Helmet } from "react-helmet";
 import { formatDate } from '../../../components/utilsFunctions';
 import AttendanceDate from './AttendanceDate';
 import deepEqual from "deep-equal";
 import queryString from 'query-string';
+import FormHeader from '../../../components/FormHeader';
+import FormHeading from '../../../components/FormHeading';
+import FormFooter from '../../../components/FormFooter';
 
 const styles = theme => ({
-    root: { margin: theme.spacing.unit * 12, paddingBottom: theme.spacing.unit * 1, [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' } },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    cancelBtn: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(255, 255, 255, 1)", color: "rgba(75, 123, 227, 1)", borderRadius: "25px", border: "1px solid rgba(0, 0, 0, 0.12)", marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: 0 } },
-    createUser: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(75, 123, 227, 1)", color: '#fff', borderRadius: "25px", border: "1px solid " + theme.palette.border.hoverThirdBorder, marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: '10px' } },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
+    root: { margin: theme.spacing(11), paddingBottom: theme.spacing(1), [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' } },
     backgroundColor: { background: theme.palette.formcolor.backgroundFullPage, width: "100%", textAlign: "center" },
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
-
-    mainCardTitle: { fontSize: "20px !important", fontWeight: 500, color: "#003244" },
-    submitDiv: { display: "flex", position: "relative", padding: "10px", justifyContent: "flex-end", backgroundColor: "#fff", }
 })
 
 class Attendance extends React.Component {
     constructor() {
         super()
-        this.fieldVariables = {isUpdate:false, errorMessage:'', attendanceDate: new Date(), backUpAttendance:[], studentAttendanceArray: [] }
+        this.fieldVariables = { isUpdate: false, errorMessage: '', attendanceDate: new Date(), backUpAttendance: [], studentAttendanceArray: [], isSundayOrHoliDay: '' }
         this.yupSchema = AttendanceSchema();
         this.state = {
-            isRender: false, isSuccess: false, successMessage: "", isError: false, errorMessage: ""
+            isLoading: false, isRender: false, isSuccess: false, successMessage: "", isError: false, errorMessage: ""
         }
     }
 
     componentWillMount = async () => {
-        let response = await this.props.authenticatedApiCall('get', '/api/teacherservice/getmystudents', null);
+        let response;
+        if (this.props.currentUser.userDetails.role == 'Teacher') {
+            response = await this.props.authenticatedApiCall('get', '/api/teacherservice/getmystudents', null);
+        } else if (this.props.currentUser.userDetails.role == 'Principal') {
+            response = await this.props.authenticatedApiCall('get', '/api/principalservice/getStaffList', null);
+        }
+        // let response = await this.props.authenticatedApiCall('get', '/api/teacherservice/getmystudents', null);
         if (response.data.status == 1) {
             let studentList = []
             response.data.statusDescription.map((item) => {
                 let studentObject = {
-                    studentId: item.userid,
-                    studentname: item.firstname + " " + item.lastname,
+                    studentId: item.userId,
+                    studentname: item.firstName + " " + item.lastName,
                     images: item.images,
                     attendance: ""
                 }
@@ -58,49 +56,71 @@ class Attendance extends React.Component {
     }
 
     handleSubmit = async (values) => {
-        console.log('values',values)
+        this.setState({ isLoading: true })
         let dataToSend = [];
         values.studentAttendanceArray.map((item) => {
             let attendanceObj = {
                 studentId: item.studentId,
-                teacherId: this.props.currentUser.userDetails.userid,
+                teacherId: this.props.currentUser.userDetails.userId,
                 attendance: item.attendance.value,
-                attendanceDate:formatDate(values.attendanceDate)
+                attendanceDate: formatDate(values.attendanceDate)
+            }
+            if (item.attendance.value == 2 || item.attendance.value == 3) {
+                attendanceObj.reason = item.reason
             }
             dataToSend.push(attendanceObj)
         })
-        if(values.isUpdate){
+        console.log('dataToSend attendance',dataToSend)
+        if (values.isUpdate) {
             let updatedData = []
             values.studentAttendanceArray.map((item, index) => {
-                if(!deepEqual(item, values.backUpAttendance[index])){
+                if (!deepEqual(item, values.backUpAttendance[index])) {
                     let attendanceObj = {
                         studentId: item.studentId,
-                        teacherId: this.props.currentUser.userDetails.userid,
+                        teacherId: this.props.currentUser.userDetails.userId,
                         attendance: item.attendance.value,
-                        attendanceDate:formatDate(values.attendanceDate)
+                        attendanceDate: formatDate(values.attendanceDate)
+                    }
+                    if (item.attendance.value == 2 || item.attendance.value == 3) {
+                        attendanceObj.reason = item.reason
                     }
                     updatedData.push(attendanceObj)
                 }
             })
             dataToSend = updatedData;
         }
-        if(dataToSend.length>0){
-            let response = await this.props.authenticatedApiCall('post', '/api/teacherservice/savestudentAttendance', {attendanceArray:dataToSend});
-            if (response.data.status === 1) {
-                this.setState({isSuccess:true, successMessage: response.data.statusDescription})
-            } else {
-                this.setState({isError:true, errorMessage: response.data.statusDescription})
+        if (dataToSend.length > 0) {
+            let response;
+            if (this.props.currentUser.userDetails.role == 'Teacher') {
+                response = await this.props.authenticatedApiCall('post', '/api/teacherservice/savestudentAttendance', { attendanceArray: dataToSend });
+            } else if (this.props.currentUser.userDetails.role == 'Principal') {
+                response = await this.props.authenticatedApiCall('post', '/api/principalservice/saveStaffAttendance', { attendanceArray: dataToSend });
             }
-        }else{
-            this.setState({isError:true, errorMessage:"No changes found"})
+            if (response.data.status === 1) {
+                this.setState({ isLoading: false, isSuccess: true, successMessage: response.data.statusDescription })
+            } else {
+                this.setState({ isLoading: false, isError: true, errorMessage: response.data.statusDescription })
+            }
+        } else {
+            this.setState({ isError: true, errorMessage: "No changes found" })
         }
     }
-    backToHome = () => {
-        this.props.history.push('./studentlist')
+    handleCancel = () => {
+        if (this.props.currentUser.userDetails.role == 'Teacher') {
+            this.props.history.push('./studentattendance')
+        } else if (this.props.currentUser.userDetails.role == 'Principal') {
+            this.props.history.push('./staffattendance')
+        }
     }
     backDashboard = () => {
+        let attendancePageName;
+        if (this.props.currentUser.userDetails.role === 'Principal') {
+            attendancePageName = 'staffattendance'
+        } else if (this.props.currentUser.userDetails.role === 'Teacher') {
+            attendancePageName = 'studentattendance'
+        }
         let parsed = {}
-        parsed.reloadTo = 'studentattendance';
+        parsed.reloadTo = `${attendancePageName}`;
         parsed.timeOut = '100';
         const stringified = queryString.stringify(parsed);
         this.props.history.push({
@@ -115,29 +135,24 @@ class Attendance extends React.Component {
         const HeaderText = "Success"
         return (
             <div className={classes.root}>
-                <Helmet> <title>Create | Edit Attendance</title></Helmet>
-                {this.state.isRender && <Formik initialValues={this.fieldVariables} validationSchema={this.yupSchema} onSubmit={this.handleSubmit}>
-                    {(formikProps) => (
-                        <Form>
-                            <>
-                                <Paper className={classes.formHeader}>
-                                    <Typography className={classes.center}>Create Attendance</Typography>
-                                </Paper>
-                                <AttendanceDate />
+                <FormHeader headerText={"Create Attendance"} pageTitle={"Create | Edit Attendance"} />
+                <FormHeading formHeadingNumber={1} formHeadingText={'You can record daily attendance here.'} />
+                {this.state.isRender &&
+                    <Formik initialValues={this.fieldVariables} validationSchema={this.yupSchema} onSubmit={this.handleSubmit}>
+                        {(formikProps) => (
+                            <Form>
                                 <Card className={classes.backgroundColor}>
+                                    <AttendanceDate />
                                     <AttendanceUI props={this.props} />
                                 </Card>
-                            </>
-                            <div className={classes.submitDiv}>
-                                <Button className={classes.cancelBtn} onClick={this.backToHome}>Cancel</Button>
-                                <Button type="submit" className={classes.createUser}>Submit</Button>
-                            </div>
-                        </Form>
-                    )}
-                </Formik>}
+                                <FormFooter handleCancel={this.handleCancel} startSpinner={this.state.startSpinner} />
+                            </Form>
+                        )}
+                    </Formik>}
+                {this.state.isLoading && <CircularProgress style={{ position: "absolute", top: "40%", left: "45%", zIndex: '99999' }} />}
                 {(this.state.isSuccess ? <SuccessDialog successButton={OkButton} HeaderText={HeaderText} BodyText={this.state.successMessage} dismiss={this.backDashboard} /> : "")}
                 {(this.state.isError ? <ErrorDialog successButton={OkButton} HeaderText={this.state.errorMessage} dismiss={this.backDashboard} /> : "")}
-            </div>
+            </div >
         )
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
-import { withStyles, Grid, Button, Typography } from '@material-ui/core';
+import { withStyles, Grid, Button } from '@material-ui/core';
 import ActionButton from './ActionEventButton';
 import MuiThemeDataTable from '../../components/MuiThemeDataTable';
 import { WithAccount } from '../AccountContext';
@@ -9,9 +9,9 @@ import SuccessDialog from '../../components/SuccessDialog';
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 11,
+        margin: theme.spacing(2),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(11),
         [theme.breakpoints.down('md')]: { margin: 0, marginTop: 0 },
     },
     GridContainer: { marginTop: "20px" },
@@ -219,4 +219,4 @@ class StudentEvents extends React.Component {
         );
     }
 }
-export default withStyles(styles)(AuthenticatedPage("Student")(WithAccount(StudentEvents)));
+export default withStyles(styles)(AuthenticatedPage()(WithAccount(StudentEvents)));

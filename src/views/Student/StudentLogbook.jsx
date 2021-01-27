@@ -17,4 +17,4 @@ class StudentLogbook extends React.Component {
     }
 }
 
-export default AuthenticatedPage(['Student'])(StudentLogbook);
+export default AuthenticatedPage()(StudentLogbook);

@@ -1,23 +1,16 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { Card, Grid, Paper } from '@material-ui/core';
+import { withStyles, Card, Grid } from '@material-ui/core';
 import AuthenticatedPage from "../AuthenticatedPage";
-import { Field, connect } from 'formik';
-import FormikSelect from '../../components/FormikValidatedComponents/SelectFieldWithLabel';
+import { connect } from 'formik';
+import { classOptions6to12, classOptions0to5, sectionOptions, weekDaysOptions, subjectOptions6to12, subjectOptions0to5 } from '../../components/utilsFunctions';
+import FormHeading from '../../components/FormHeading';
+import SelectWithFunction from '../../CommonComponents/SelectWithFunction';
+import SelectWithLabel from '../../CommonComponents/SelectWithLabel';
 
 const styles = (theme) => ({
-    paddingBottom: { padding: "15px" },
-    inputSelect: { width: "495px", [theme.breakpoints.down('sm')]: { width: "350px" } },
     questionContainer: { display: "flex", alignItems: "center", flexDirection: "row", marginBottom: "15px" },
     backgroundColor: { background: theme.palette.formcolor.backgroundFullPage, width: "100%" }
 });
-const classOptions6to12 = [{ value: 1, label: "6th" }, { value: 2, label: "7th" }, { value: 3, label: "8th" }, { value: 4, label: "9th" }, { value: 5, label: "10th" }, { value: 6, label: "11th" }, { value: 7, label: "12th" }];
-const classOptions0to5 = [{ value: 1, label: "Nursery" }, { value: 2, label: "LKG" }, { value: 3, label: "UKG" }, { value: 4, label: "1st" }, { value: 5, label: "2nd" }, { value: 6, label: "3rd" }, { value: 7, label: "4th" }, { value: 8, label: "5th" }];
-
-const sectionOptions = [{ value: 1, label: "A" }, { value: 2, label: "B" }, { value: 3, label: "C" }, { value: 4, label: "D" }, { value: 5, label: "E" }]
-const weekDaysOptions = [{ value: 1, label: "Monday" }, { value: 2, label: "Tuesday" }, { value: 3, label: "Wednesday" }, { value: 4, label: "Thursday" }, { value: 5, label: "Friday" }, { value: 6, label: "Saturday" }]
-const subjectOptions6to12 = [{ value: 1, label: 'Hindi' }, { value: 2, label: 'English' }, { value: 3, label: 'Mathematics' }, { value: 4, label: 'Science' }, { value: 5, label: 'Social Science' }, { value: 6, label: 'Geography' }, { value: 7, label: 'physics' }, { value: 8, label: 'Chemistry' }, { value: 9, label: 'Biology' }, { value: 10, label: 'Moral Science' }, { value: 11, label: 'Drawing' }, { value: 12, label: 'Computer' }, { value: 13, label: 'EVS' }, { value: 14, label: 'Sanskrat' }]
-const subjectOptions0to5 = [{ value: 1, label: 'Hindi' }, { value: 2, label: 'English' }, { value: 3, label: 'Mathematics' }, { value: 4, label: 'Social Science' }, { value: 5, label: 'GK' }, { value: 6, label: 'Moral Science' }, { value: 7, label: 'Drawing' }, { value: 8, label: 'EVS' }, { value: 9, label: 'Computer' }, { value: 10, label: 'Sanskrat' }]
 
 class TimeTableUI extends React.Component {
     constructor(props) {
@@ -71,11 +64,10 @@ class TimeTableUI extends React.Component {
             })
             this.setState({ periodArray: periodArray })
         }
-
     }
     createSubjectObject = (subjectArray) => {
         let subjetcs = []
-        if (this.props.currentUser.userDetails.accouttype == 1) {
+        if (this.props.currentUser.userDetails.userType == 1) {
             subjectArray.map((data) => {
                 subjectOptions0to5.map((item) => {
                     if (item.value === data) {
@@ -100,7 +92,7 @@ class TimeTableUI extends React.Component {
     createTeachersObject = (teachersArray) => {
         let teachers = []
         teachersArray.map((data) => {
-            teachers.push({ value: data.userid, label: data.firstname + " " + data.lastname })
+            teachers.push({ value: data.userId, label: data.firstName + " " + data.lastName })
         })
         return teachers;
     }
@@ -125,101 +117,20 @@ class TimeTableUI extends React.Component {
         const { classes } = this.props;
         return (
             <>
-                <Paper>
-                    <Card className={classes.backgroundColor}>
-                        <Grid container className={classes.questionContainer}>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '1000' }}>
-                                <Field
-                                    name="class"
-                                    options={this.props.currentUser.userDetails.accouttype == 1 ? classOptions0to5 : classOptions6to12}
-                                    onChange={this.handleClassChange}
-                                    placeholder={"Select Class"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '999' }}>
-                                <Field
-                                    name="section"
-                                    options={sectionOptions}
-                                    placeholder={"Select Section"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '999' }}>
-                                <Field
-                                    name="dayName"
-                                    options={weekDaysOptions}
-                                    placeholder={"Select Day"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '999' }}>
-                                <Field
-                                    name="periodName"
-                                    options={this.state.periodArray}
-                                    placeholder={"Select Period"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '1000' }}>
-                                <Field
-                                    name="subject"
-                                    onChange={this.handleSubjectChange}
-                                    options={this.state.subjectsArray}
-                                    placeholder={"Select Subject"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                            <Grid item lg={6} md={6} sm={12} xs={12} className={classes.paddingBottom} style={{ zIndex: '999' }}>
-                                <Field
-                                    name="teacherName"
-                                    options={this.state.teachersArray}
-                                    placeholder={"Select Teacher"}
-                                    className={classes.inputSelect + " " + "selectstyle"}
-                                    component={FormikSelect}
-                                    isSearchable={false}
-                                    variant="filled"
-                                    isClearable={false}
-                                    menuPortalTarget={document.body}
-                                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Card>
-                </Paper>
+                <FormHeading formHeadingNumber={1} formHeadingText={'Time Table Details'} />
+                <Card className={classes.backgroundColor}>
+                    <Grid container className={classes.questionContainer}>
+                        <SelectWithFunction fieldLabel={'Select Class'} fieldName={'classId'} selectOptions={this.props.currentUser.userDetails.userType == 1 ? classOptions0to5 : classOptions6to12} handleChangeOption={this.handleClassChange} />
+                        <SelectWithLabel fieldLabel={'Select Section'} fieldName={'sectionId'} selectOptions={sectionOptions} />
+                        <SelectWithLabel fieldLabel={'Select Day'} fieldName={'dayName'} selectOptions={weekDaysOptions} />
+                        <SelectWithLabel fieldLabel={'Select Period'} fieldName={'periodName'} selectOptions={this.state.periodArray} />
+                        <SelectWithFunction fieldLabel={'Select Subject'} fieldName={'subject'} selectOptions={this.state.subjectsArray} handleChangeOption={this.handleSubjectChange} />
+                        <SelectWithLabel fieldLabel={'Select Teacher'} fieldName={'teacherName'} selectOptions={this.state.teachersArray} />
+                    </Grid>
+                </Card>
             </>
         );
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("Principal")(connect(TimeTableUI)));
+export default withStyles(styles)(AuthenticatedPage()(connect(TimeTableUI)));

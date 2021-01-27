@@ -63,7 +63,6 @@ class ForgetPassword extends Component {
     }
 
     handleSubmit = (values) => {
-        console.log("hitt")
         axios.post('/api/providerauthservice/forgetPassword', { 
             adharnumber: values.adharnumber,
             cellnumber: values.cellnumber,

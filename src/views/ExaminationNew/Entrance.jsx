@@ -1,16 +1,15 @@
 
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import AuthenticatedPage from "../AuthenticatedStudent";
 import ExamStart from './ExamStart';
-import { Typography, Button, Card, CardContent, CardActions } from '@material-ui/core';
+import { withStyles, Typography, Button, Card, CardContent, CardActions, Grid } from '@material-ui/core';
 import GridContainer from '../../components/Grid/GridContainer.jsx';
 import GridItem from '../../components/Grid/GridItem.jsx';
 
 const styles = (theme) => ({
     root: {
-        margin: theme.spacing.unit * 11,
-        paddingBottom: theme.spacing.unit * 1,
+        margin: theme.spacing(11),
+        paddingBottom: theme.spacing(1),
         [theme.breakpoints.down('md')]: {
             margin: 0,
             paddingTop: '5px'
@@ -23,15 +22,20 @@ const styles = (theme) => ({
 })
 
 class Entrance extends React.Component {
-    state = { startTest: false }
+    state = { startTest: false, disableButton:false, numberOfStudents:"" }
 
     handleStartTest = () => {
         this.setState({ startTest: true })
     }
-
+    
+    async componentDidMount() {
+        let response = await this.props.authenticatedApiCall('get', '/api/examinationservice/getQuestionForEntrance', null);
+        if (response.data.status == 0) {
+            this.setState({disableButton:true, numberOfStudents:"No question found to start your examination."})
+        }
+    }
     render() {
         const { classes } = this.props;
-        console.log("entrance")
         return (
             <div className={classes.root}>
                 <Card style={{ padding: "30px" }}>
@@ -49,11 +53,14 @@ class Entrance extends React.Component {
                             <span>2. Don't Refresh the page during your examination.</span><br />
                             <span>3. Press Next Button for next question.</span><br />
                             <span>4. When will your exam don't close the tab Note done your reasult.</span>
-                            </GridItem>
+                            </GridItem><br></br>
+                            {this.state.disableButton&&<GridItem  xs={12} sm={12} style={{marginTop:"20px"}}>
+                               <Typography variant="h4">Note: <b>{this.state.numberOfStudents}</b></Typography>
+                            </GridItem>}
                         </GridContainer>
                     </CardContent>
                     <CardActions className={classes.pad_15}>
-                    <Button onClick={this.handleStartTest} className={classes.primaryButton}> Start Your Test </Button>
+                    <Button onClick={this.handleStartTest} className={classes.primaryButton} disabled={this.state.disableButton}> Start Your Test </Button>
                     </CardActions>
                     </>}
                 </Card>

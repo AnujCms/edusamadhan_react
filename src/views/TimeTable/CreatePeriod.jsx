@@ -1,43 +1,35 @@
 import React from 'react';
 import AuthenticatedPage from "../AuthenticatedPage";
-import { withStyles, Grid, Button, Typography, Paper, TextField } from '@material-ui/core';
+import { withStyles, Grid, Button, Paper, FormControl, InputLabel } from '@material-ui/core';
 import { WithAccount } from '../AccountContext';
 import ErrorDialog from '../../components/ErrorDialog';
 import SuccessDialog from '../../components/SuccessDialog';
-import { Helmet } from "react-helmet";
 import PeriodView from './PeriodView';
 import Select from 'mui-select-with-search-vivek';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker } from '@material-ui/pickers';
 import 'date-fns';
+import { periodsObjects, handlePeriodValue } from '../../components/utilsFunctions';
+import FormHeader from '../../components/FormHeader';
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 11,
-        [theme.breakpoints.down('md')]: { margin: 0, marginTop: 0 },
+        margin: theme.spacing(22),
+        marginTop: theme.spacing(12),
+        paddingBottom: theme.spacing(1),
+        [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' }
     },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
     container: { display: 'flex', flexWrap: 'wrap' },
-    textField: { marginLeft: theme.spacing(1), marginRight: theme.spacing(1), width: 200 },
     paddingBottom: { padding: "10px" },
-    pad0: { padding: 0 },
     btnStyle: { margin: "0px", height: "70px", width: "100%", [theme.breakpoints.down('md')]: { marginBottom: "20px" } },
     cancelBtn: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(255, 255, 255, 1)", color: "rgba(75, 123, 227, 1)", borderRadius: "25px", border: "1px solid rgba(0, 0, 0, 0.12)", marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: 0 } },
     createUser: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(75, 123, 227, 1)", color: '#fff', borderRadius: "25px", border: "1px solid " + theme.palette.border.hoverThirdBorder, marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: '10px' } },
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
 });
 
-const periodsObjects = [{ value: 1, label: "1st Period" }, { value: 2, label: "2nd Period" }, { value: 3, label: "3rd Period" }, { value: 4, label: "4th Period" }, { value: 5, label: "5th Period" }, { value: 6, label: "6th Period" }, { value: 7, label: "7th Period" }, { value: 8, label: "8th Period" }, { value: 9, label: "9th Period" }, { value: 10, label: "10th Lunch Break" }]
-
 class CreatePeriod extends React.Component {
     constructor(props) {
         super(props);
-        const { t } = this.props;
         this.fieldVariables = {
             periodDetails: []
         }
@@ -56,17 +48,8 @@ class CreatePeriod extends React.Component {
         this.props.history.push(`./create-period`);
     }
 
-    setPeriodValue = (value) => {
-        let periodObj
-        periodsObjects.map((item) => {
-            if (item.value === value) {
-                periodObj = item
-            }
-        })
-        return periodObj;
-    }
     handlePeriodChange = (event) => {
-        this.setState({ periodObj: this.setPeriodValue(event.value) })
+        this.setState({ periodObj: handlePeriodValue(event.value) })
     }
     handlePeriodStartTime = (value) => {
         this.setState({ periodStartTime: value })
@@ -98,7 +81,7 @@ class CreatePeriod extends React.Component {
             }
             let response = await this.props.authenticatedApiCall('post', "/api/timetableservice/createperiods", dataToSend);
             if (response.data.status === 1) {
-                this.setState({reRender:false, isSuccess: true, successMessage: response.data.statusDescription });
+                this.setState({ reRender: false, isSuccess: true, successMessage: response.data.statusDescription });
             } else {
                 this.setState({ isError: true, successMessage: response.data.statusDescription });
             }
@@ -118,10 +101,7 @@ class CreatePeriod extends React.Component {
         const OkButton = [<Button className={classes.OkButton} onClick={this.backDashboard}>Ok</Button>]
         return (
             <div className={classes.root}>
-                <Helmet> <title>Time Table </title></Helmet>
-                <Paper className={classes.formHeader}>
-                    <Typography className={classes.center}>Manage Period Durations</Typography>
-                </Paper>
+                <FormHeader headerText={"Manage Period Durations"} pageTitle={"Create | Edit Period"} />
                 <Paper>
                     <form className={classes.container} noValidate>
                         <Grid container>
@@ -187,4 +167,4 @@ class CreatePeriod extends React.Component {
         );
     }
 }
-export default withStyles(styles)(AuthenticatedPage("Principal")(WithAccount(CreatePeriod)));
+export default withStyles(styles)(AuthenticatedPage()(WithAccount(CreatePeriod)));

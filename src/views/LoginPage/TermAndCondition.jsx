@@ -4,9 +4,9 @@ import { Helmet } from "react-helmet";
 
 const styles = (theme) => ({
     root: {
-        margin: theme.spacing.unit * 3,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 4,
+        margin: theme.spacing(3),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(4),
         [theme.breakpoints.down('md')]: { margin: 0 },
     },
     linespacing:{

@@ -3,11 +3,11 @@ import AuthenticatedPage from "../AuthenticatedPage";
 import {dashboardObj, SuperAdminDashboarContextProvider} from '../Context/SuperAdminDashboardContext';
 import { NavLink, Switch, Route, Redirect } from "react-router-dom";
 import { withStyles, Button, Menu, MenuItem, Avatar } from '@material-ui/core';
-import { Person, ExitToApp, AccessAlarm} from '@material-ui/icons';
-import ManageAccount from "./ManageAccount";
+import { Person, ExitToApp, Refresh} from '@material-ui/icons';
+import ManageAccount from "./CreateAccount/ManageAccount";
 import StudentList from './StudentList';
 import Navbar from '../../components/Navbar';
-import CreateAccount from './CreateAccount';
+import CreateAccount from './CreateAccount/CreateAccount';
 import SessionTimer from '../../TimeOutRenderer';
 import Logbook from '../Logbook/Logbook';
 import TeacherImage from '../../assets/images/admin.png';
@@ -81,7 +81,7 @@ class SuperAdmin extends React.Component {
                 onClick={this.handleClick}
                 className={classes.headPop}
             >
-                <p style={{ marginRight: "15px" }}>{this.props.currentUser.userDetails.firstname} </p>
+                <p style={{ marginRight: "15px" }}>{this.props.currentUser.userDetails.firstName} </p>
                 <Avatar alt="No Images" src={isImage ? ("data:image/jpeg;base64," + this.props.currentUser.userDetails.image) : TeacherImage} className={this.props.classes.avatar} />
             </Button>,
             <Menu className={classes.root}
@@ -92,7 +92,7 @@ class SuperAdmin extends React.Component {
             >
                 <div className={classes.simpleMenu}>
                 <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Person className={classes.btnIcon}/><NavLink to={`${match.url}/profile`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Profile</NavLink></MenuItem>
-                <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><AccessAlarm className={classes.btnIcon}/><NavLink to={`${match.url}/resetpassword`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Re-Set Pssword</NavLink></MenuItem>
+                <MenuItem onClick={this.handlepopClose} className={classes.borderBottom+" "+classes.liCommon}><Refresh className={classes.btnIcon}/><NavLink to={`${match.url}/resetpassword`} className={classes.navLink} activeStyle={{ fontWeight: "bold", color: "blue" }} style={{ padding: "0", width: "100%" }}>Change Password</NavLink></MenuItem>
                 <MenuItem onClick={this.handleLogout} className={classes.borderBottom+" "+classes.liCommon}><ExitToApp className={classes.btnIcon}/>Logout</MenuItem>
                 </div>
             </Menu>,
@@ -125,4 +125,4 @@ class SuperAdmin extends React.Component {
     }
 }
 
-export default AuthenticatedPage("SuperAdmin")(withStyles(styles)(SuperAdmin));
+export default AuthenticatedPage()(withStyles(styles)(SuperAdmin));

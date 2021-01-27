@@ -28,6 +28,34 @@ code {
 .MuiTypography-h6 {
   line-height: 0 !important;
 }
+
+@media print {
+  body * {
+    visibility: visible;
+  }
+  #print-graph, #print-graph * {
+    visibility: visible;
+  }
+  .graphPrint div div {
+    overflow: visible !important;
+  }
+  #print-graph .pad_35, #print-graph .header {
+    padding: 15px 0 0 45px !important;
+    max-width: 750px !important;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 1;
+  }
+  
+ 
+}
+
+
 /* .MuiToolbar-regular {
   min-height: 65px !important;
 } */

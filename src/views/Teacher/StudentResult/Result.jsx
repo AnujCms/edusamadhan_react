@@ -1,40 +1,29 @@
 import React from 'react';
 import AuthenticatedPage from "../../AuthenticatedPage";
-import { withStyles, withWidth, Button, Paper } from '@material-ui/core';
-import Card from "../../../components/Card/Card.jsx";
-import Typography from '@material-ui/core/Typography';
+import { withStyles, withWidth, Button, Card } from '@material-ui/core';
 import SuccessDialog from '../../../components/SuccessDialog';
 import ErrorDialog from '../../../components/ErrorDialog';
 import { Formik, Form, connect } from 'formik';
+import FormHeader from '../../../components/FormHeader';
 import ResultSchema from './ResultSchema';
 import ResultUI from './ResultUI';
-import Spinner from '@material-ui/core/CircularProgress';
-import { Helmet } from "react-helmet";
 import ExamType from './ExamType';
+import FormFooter from '../../../components/FormFooter';
+import { examOptions, subjectOptions6to12, subjectOptions0to5 } from '../../../components/utilsFunctions';
 
 const styles = theme => ({
-    root: { margin: theme.spacing.unit * 12, paddingBottom: theme.spacing.unit * 1, [theme.breakpoints.down('md')]: { margin: 0, paddingTop: '5px' } },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    cancelBtn: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(255, 255, 255, 1)", color: "rgba(75, 123, 227, 1)", borderRadius: "25px", border: "1px solid rgba(0, 0, 0, 0.12)", marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: 0 } },
-    createUser: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(75, 123, 227, 1)", color: '#fff', borderRadius: "25px", border: "1px solid " + theme.palette.border.hoverThirdBorder, marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: '10px' } },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
+    root: { marginTop: theme.spacing(11), maxWidth: "1200px", margin: "0 auto", [theme.breakpoints.down('md')]: { margin: 0, paddingLeft: 0, paddingRight: 0, paddingTop: 0 } },
     backgroundColor: { background: theme.palette.formcolor.backgroundFullPage, width: "100%", textAlign: "center" },
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
-
-    mainCardTitle: { fontSize: "20px !important", fontWeight: 500, color: "#003244" },
-    submitDiv: { display: "flex", position: "relative", padding: "10px", justifyContent: "flex-end", backgroundColor: "#fff", marginBottom:"40px" }
 })
-const examOptions = [{ value: 1, label: '3 Monthly' }, { value: 2, label: '6 Monthly' }, { value: 3, label: '9 Monthly' }, { value: 4, label: 'Yearly' }]
-const subjectOptions6to12 = [{ value: 1, label: 'Hindi' }, { value: 2, label: 'English' }, { value: 3, label: 'Mathematics' }, { value: 4, label: 'Science' }, { value: 5, label: 'Social Science' }, { value: 6, label: 'Geography' }, { value: 7, label: 'physics' }, { value: 8, label: 'Chemistry' }, { value: 9, label: 'Biology' }, { value: 10, label: 'Moral Science' }, { value: 11, label: 'Drawing' }, { value: 12, label: 'Computer' }, { value: 13, label: 'EVS' }, { value: 14, label: 'Sanskrat' }]
-const subjectOptions0to5 = [{ value: 1, label: 'Hindi' }, { value: 2, label: 'English' }, { value: 3, label: 'Mathematics' }, { value: 4, label: 'Social Science' }, { value: 5, label: 'GK' }, { value: 6, label: 'Moral Science' }, { value: 7, label: 'Drawing' }, { value: 8, label: 'EVS' }, { value: 9, label: 'Computer' }, { value: 10, label: 'Sanskrat' }]
 
 class Result extends React.Component {
     constructor() {
         super()
-        this.fieldVariables = { backUp:[],examinationType: '', subjectResultArray: [] }
+        this.fieldVariables = { backUp: [], examinationType: '', subjectResultArray: [] }
         this.yupSchema = ResultSchema();
         this.state = {
-            examinationType:"",isSuccess: false, successMessage:"", isError:false, errorMessage:""
+            examinationType: "", isSuccess: false, successMessage: "", isError: false, errorMessage: ""
         }
     }
 
@@ -43,7 +32,7 @@ class Result extends React.Component {
         data.forEach(subjectObj => {
             subjectOptions6to12.forEach(obj => {
                 if (subjectObj === obj.value) {
-                    subjects.push({ subjectName: obj.label, theoryTotalMarks: "", theoryObtainMarks: "", practicalTotalMarks:"", practicalObtainMarks:"", grade: "" })
+                    subjects.push({ subjectName: obj.label, theoryTotalMarks: "", theoryObtainMarks: "", practicalTotalMarks: "", practicalObtainMarks: "", grade: "" })
                 }
             })
         })
@@ -55,7 +44,7 @@ class Result extends React.Component {
         data.forEach(subjectObj => {
             subjectOptions0to5.forEach(obj => {
                 if (subjectObj === obj.value) {
-                    subjects.push({ subjectName: obj.label, theoryTotalMarks: "", theoryObtainMarks: "", practicalTotalMarks:"", practicalObtainMarks:"", grade: "" })
+                    subjects.push({ subjectName: obj.label, theoryTotalMarks: "", theoryObtainMarks: "", practicalTotalMarks: "", practicalObtainMarks: "", grade: "" })
                 }
             })
         })
@@ -64,14 +53,14 @@ class Result extends React.Component {
     }
     componentWillMount = async () => {
         let examinationArray = [];
-        JSON.parse(this.props.currentUser.userDetails.configdata).examoption.map((item) => {
+        JSON.parse(this.props.currentUser.userDetails.configData).examOption.map((item) => {
             examOptions.forEach(examObj => {
                 if (item == examObj.value) {
                     examinationArray.push(examObj)
                 }
             })
         })
-        this.setState({examinationType:examinationArray})
+        this.setState({ examinationType: examinationArray })
         let response = await this.props.authenticatedApiCall('get', '/api/teacherservice/assignsubjects', null);
         if (response.data.status == 1) {
             if (this.props.currentUser.userDetails.accouttype == 1) {
@@ -83,21 +72,25 @@ class Result extends React.Component {
             // setState({ errorMessage: response.data.statusDescription, isError: true })
         }
     }
-  
+
     handleSubmit = async (values) => {
-      let dataToSend = {
-        studentid: this.props.studentid,
-        examinationType: values.examinationType.value,
-        subjectResultArray: values.subjectResultArray
-      }
-        let response = await this.props.authenticatedApiCall('post', '/api/teacherservice/savestudentresult', dataToSend);
-        if (response.data.status === 1) {
-            this.setState({isSuccess:true, successMessage: response.data.statusDescription})
+        if (values.subjectResultArray.length > 0) {
+            let dataToSend = {
+                studentId: this.props.studentId,
+                examinationType: values.examinationType.value,
+                subjectResultArray: values.subjectResultArray
+            }
+            let response = await this.props.authenticatedApiCall('post', '/api/teacherservice/savestudentresult', dataToSend);
+            if (response.data.status === 1) {
+                this.setState({ isSuccess: true, successMessage: response.data.statusDescription })
+            } else {
+                this.setState({ isError: true, errorMessage: response.data.statusDescription })
+            }
         } else {
-            this.setState({isError:true, errorMessage: response.data.statusDescription})
+            this.setState({ isError: true, errorMessage: "Not enough data to save." })
         }
     }
-    backToHome = () =>{
+    handleCancel = () => {
         this.props.history.push('../studentlist')
     }
     backDashboard = () => {
@@ -105,28 +98,20 @@ class Result extends React.Component {
     }
     render() {
         const { classes } = this.props;
-        console.log('this.fieldVariables.subjectResultArray',this.fieldVariables.subjectResultArray)
         const OkButton = [<Button className={classes.OkButton} onClick={this.backDashboard}>Ok</Button>]
-        const HeaderText = "Success"
+        const HeaderText = "Success";
+        console.log('saate',this.state.examinationType)
         return (
             <div className={classes.root}>
-                <Helmet> <title>Create | Edit Result</title></Helmet>
+                <FormHeader headerText={"Create Result"} pageTitle={"Create | Edit Result"} />
                 <Formik initialValues={this.fieldVariables} validationSchema={this.yupSchema} onSubmit={this.handleSubmit}>
                     {(formikProps) => (
                         <Form>
-                            <>
-                                <Paper className={classes.formHeader}>
-                                    <Typography className={classes.center}>Create Result</Typography>
-                                </Paper>
-                                <ExamType examinationType={this.state.examinationType} studentid={this.props.studentid} />
-                                <Card className={classes.backgroundColor}>
-                                    <ResultUI props={this.props} />
-                                </Card>
-                            </>
-                            <div className={classes.submitDiv}>
-                                <Button className={classes.cancelBtn} onClick={this.backToHome}>Cancel</Button>
-                                <Button type="submit" className={classes.createUser}>Submit</Button>
-                            </div>
+                            <Card className={classes.backgroundColor}>
+                                <ExamType examinationType={this.state.examinationType} studentId={this.props.studentId} />
+                                <ResultUI props={this.props} />
+                            </Card>
+                            <FormFooter handleCancel={this.handleCancel} startSpinner={this.state.startSpinner} />
                         </Form>
                     )}
                 </Formik>

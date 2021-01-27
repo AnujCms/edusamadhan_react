@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet";
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 11,
+    marginTop: theme.spacing(11),
     maxWidth: '1100px',
     margin: '20px auto',
     [theme.breakpoints.down('sm')]: {
@@ -16,8 +16,8 @@ const styles = theme => ({
       marginTop: '0px'
     },
     ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 1,
-    paddingBottom: theme.spacing.unit * 1,
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     paddingLeft: '0px',
     paddingRight: '0px'
   },

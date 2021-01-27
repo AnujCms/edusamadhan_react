@@ -5,14 +5,14 @@ import FormikSelect from '../../../components/FormikValidatedComponents/SelectFi
 import { Field, connect } from 'formik';
 
 const styles = theme => ({
-    GridContainerStyle: { marginTop: "10px" },
-    inputSelect: { width: "500px", [theme.breakpoints.down('sm')]: { width: "370px" } }
+    GridContainerStyle: { margin: "25px" },
+    inputSelect: { width: "300px", [theme.breakpoints.down('sm')]: { width: "300px" } }
 });
 
 const ExamType = (props) => {
     const { classes } = props;
     const handleExaminationChange = async (selectedExam) =>{
-        let response = await props.authenticatedApiCall('get', '/api/teacherservice/getstudentresult/'+ props.studentid + "/"+ selectedExam.value, null);
+        let response = await props.authenticatedApiCall('get', '/api/teacherservice/getstudentresult/'+ props.studentId + "/"+ selectedExam.value, null);
         if (response.data.status === 1) {
             props.formik.setFieldValue(`subjectResultArray`, JSON.parse(response.data.statusDescription[0].subjectResultArray), false )
         } else {

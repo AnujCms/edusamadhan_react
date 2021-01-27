@@ -7,7 +7,8 @@ export default class formReloader extends React.Component {
      setTimeout(()=>{
         if(this.props.location.state){
           this.props.history.push(('./'+queryString.parse(this.props.location.search).reloadTo+"/"+this.props.location.state))
-        }else{ this.props.history.push('./'+queryString.parse(this.props.location.search).reloadTo);
+        }else{
+           this.props.history.push('./'+queryString.parse(this.props.location.search).reloadTo);
       }
       }, parseInt(queryString.parse(this.props.location.search).timeOut));
     return (

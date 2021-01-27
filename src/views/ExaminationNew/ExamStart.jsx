@@ -19,11 +19,10 @@ class ExamStart extends React.Component {
     }
 
     async componentDidMount() {
-        var response = await this.props.authenticatedApiCall('get', '/api/entranceexamservice/getclassforquestion', null);
+        let response = await this.props.authenticatedApiCall('get', '/api/examinationservice/getQuestionForEntrance', null);
         if (response.data.status == 1) {
             this.setState({ fullquestion: response.data.statusDescription })
         } else if (response.data.status == 0) {
-
         }
         this.handleNextQuestion();
     }

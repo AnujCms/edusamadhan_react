@@ -128,7 +128,6 @@ function Option(props) {
 }
 
 function checkBoxOption(props) {
-	console.log(props)
 	return (
 		<MenuItem
 			buttonRef={props.innerRef}

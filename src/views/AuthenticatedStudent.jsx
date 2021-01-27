@@ -23,7 +23,6 @@ function tieAuthorization(allowedRole,Component)
              return null;
            }
         }catch (ex) {
-          console.log("ERROR:",ex);
       }
       }
       render(){

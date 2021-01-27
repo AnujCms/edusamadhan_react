@@ -45,7 +45,6 @@ function HomeNavbar(props) {
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
         axios.get('/api/providerauthservice/signout').then(response =>{
-      console.log(response);  
     })
   window.location.href = "/public/Login"
 }

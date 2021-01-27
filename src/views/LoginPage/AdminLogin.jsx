@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import { withStyles, InputAdornment, Button, Typography } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
-import CardFooter from "@material-ui/core/CardActions";
 import WithUser from "./WithUser";
 import { Formik, Form, Field } from 'formik';
 import { string, object } from 'yup';
@@ -22,6 +21,7 @@ const styles = theme => ({
       backgroundColor: theme.palette.hoverPrimaryColor.main, color: theme.palette.text.hoverTextPrimaryColor, border: "1px solid " + theme.palette.border.hoverPrimaryBorder
     }
   },
+  loginBtnStyle:{textAlign:"center"},
   inputItem: { width: "100%", marginBottom: "15px" },
   icnColor: { cursor: "pointer" },
   OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonBackground } },
@@ -60,8 +60,14 @@ class LoginPage extends React.Component {
           else if (response.data.userrole === 'SuperAdmin') {
             this.setState({ renderto: '/superadmin' })
           }
+          else if (response.data.userrole === 'Director') {
+            this.setState({ renderto: '/director' })
+          }
           else if (response.data.userrole === 'Principal') {
             this.setState({ renderto: '/principal' })
+          }
+          else if (response.data.userrole === 'Manager') {
+            this.setState({ renderto: '/manager' })
           }
           else if (response.data.userrole === 'Teacher') {
             this.setState({ renderto: '/teacher' })
@@ -86,16 +92,18 @@ class LoginPage extends React.Component {
           name: 'abcd',
           isAuthenticated: true,
           role: response.data.userrole,
-          firstname: response.data.firstname,
-          lastname: response.data.lastname,
-          userid: response.data.userid,
-          adharnumber: response.data.adharnumber,
-          studentname: response.data.studentname,
-          accountid: response.data.accountid,
-          configdata: response.data.configdata,
-          accouttype: response.data.userrole!="SuperAdmin"&&JSON.parse(response.data.configdata).accounttype,
-          accountname: response.data.accountname,
-          image: response.data.image
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          userId: response.data.userId,
+          aadharNumber: response.data.aadharNumber,
+          studentName: response.data.studentName,
+          accountId: response.data.accountId,
+          configData: response.data.configData,
+          accountName: response.data.accountName,
+          userType: response.data.userType,
+          image: response.data.image,
+          entranceExamType: response.data.entranceExamType,
+          mediumType: response.data.mediumType
         });
 
       }
@@ -105,7 +113,7 @@ class LoginPage extends React.Component {
           userError: response.data.warningmessage
         })
       }
-      else if (response.data.status === 2 || response.data.status === 3) {
+      else if (response.data.status === 2 || response.data.status === 3 || response.data.status === 4) {
         this.setState({
           lockAccount: true, isLoginBtnDisabled: false, isLoginCompleted: false,
           blockedMessage: response.data.warningmessage
@@ -115,47 +123,44 @@ class LoginPage extends React.Component {
       }
     })
       .catch(function (error) {
-        console.log(error);
       });
   }
   async componentDidMount() {
-    //   if (localStorage.getItem("refreshToken")) {
-    //     let result = await axios({
-    //         method: 'post',
-    //         url: '/api/providerauthservice/accessTokenByRefershToken',
-    //         data: { refreshToken: localStorage.getItem("refreshToken") }
-    //     });
-    //     console.log(result.data)
-    //     if (result.status === 200) {
-    //       localStorage.setItem("accessToken", result.data.accessToken);
-    //       localStorage.setItem("refreshToken", result.data.refreshToken)
-    //       if (result.data.userrole === 'SuperAdmin') {
-    //           this.props.history.push(`/superadmin`);
-    //       }
-    //       else if (result.data.userrole === 'Principal' ) {
-    //           this.props.history.push(`/principal`);
-    //       }
-    //       else if (result.data.userrole === 'Teacher') {
-    //         console.log("sdfghj")
-    //           this.props.history.push(`/teacher`);
-    //       }
-    //       else if (result.data.userrole === 'ExamHead') {
-    //           this.props.history.push(`/entranceexamehead`);
-    //       }
-    //       else if (result.data.userrole === 'FeeAccount') {
-    //         this.props.history.push(`/feeaccount`);
-    //     }
-    //     else if (result.data.userrole === 'Student') {
-    //       this.props.history.push(`/student`);
-    //   }
-    //       else if (result.data.userrole === 'EntranceStudent') {
-    //           this.props.history.push(`/entrance`);
-    //       }
-    //       else if (result.data.userrole === 'FirstTime') {
-    //         this.props.history.push(`/firsttimelogin`);
-    //     }
-    //   }
-    // }
+      if (localStorage.getItem("refreshToken")) {
+        let result = await axios({
+            method: 'post',
+            url: '/api/providerauthservice/accessTokenByRefershToken',
+            data: { refreshToken: localStorage.getItem("refreshToken") }
+        });
+        if (result.status === 200) {
+          localStorage.setItem("accessToken", result.data.accessToken);
+          localStorage.setItem("refreshToken", result.data.refreshToken)
+          if (result.data.userrole === 'SuperAdmin') {
+              this.props.history.push(`/superadmin`);
+          }
+          else if (result.data.userrole === 'Principal' ) {
+              this.props.history.push(`/principal`);
+          }
+          else if (result.data.userrole === 'Teacher') {
+              this.props.history.push(`/teacher`);
+          }
+          else if (result.data.userrole === 'ExamHead') {
+              this.props.history.push(`/entranceexamehead`);
+          }
+          else if (result.data.userrole === 'FeeAccount') {
+            this.props.history.push(`/feeaccount`);
+        }
+        else if (result.data.userrole === 'Student') {
+          this.props.history.push(`/student`);
+      }
+          else if (result.data.userrole === 'EntranceStudent') {
+              this.props.history.push(`/entrance`);
+          }
+          else if (result.data.userrole === 'FirstTime') {
+            this.props.history.push(`/firsttimelogin`);
+        }
+      }
+    }
   }
   backLogin = () => {
     this.setState({ lockAccount: false })
@@ -220,15 +225,13 @@ class LoginPage extends React.Component {
                     }}
                   />
                   <p style={{ color: "red" }} >{this.state.userError}</p>
-                  <Link style={{ textDecoration: "none", color: "rgba(109, 111, 123, 1)", marginBottom: "10px" }} to={"/homepage/dashboard"}>Back To Home</Link>
-                  <Link style={{ textDecoration: "none", color: "rgba(109, 111, 123, 1)", marginBottom: "10px", float: "right" }} to={"/public/ForgetPassword"}>Forgot Password</Link>
-                  <CardFooter className={classes.cardFooter} disabled={props.isSubmitting} style={{ textAlign: "center" }} >
-                    <Button type="submit" disabled={this.state.isLoginBtnDisabled} className={classes.submitButton} size="small">Login</Button>
-                  </CardFooter>
+                  <Link style={{ textDecoration: "none", color: "blue", marginBottom: "10px", fontSize:"18px" }} to={"/homepage/dashboard"}>Back To Home</Link>
+                  <Link style={{ textDecoration: "none", color: "blue", marginBottom: "10px",  fontSize:"18px", float: "right" }} to={"/public/ForgetPassword"}>Forgot Password</Link>
+                  <div className={classes.loginBtnStyle} disabled={props.isSubmitting} >
+                    <Button type="submit" disabled={this.state.isLoginBtnDisabled} className={classes.submitButton}>Login</Button>
+                  </div>
                 </Form>
-  
                 )}
-  
             </Formik>
               )}
               {(this.state.lockAccount ? <ErrorDialog successButton={OkButton} HeaderText={HeaderText} dismiss={this.backLogin} /> : "")}

@@ -46,7 +46,6 @@ function tieAuthorization(Component) {
           throw error;
         }
       } catch (ex) {
-        console.log("ERROR:", ex);
         this.setState({ isError: true })
       }
     }

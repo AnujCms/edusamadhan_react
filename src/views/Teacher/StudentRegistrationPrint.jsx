@@ -11,7 +11,7 @@ import Moment from 'react-moment';
 import { Helmet } from "react-helmet";
 
 const styles = theme => ({
-    root: { marginTop: theme.spacing.unit * 12, maxWidth: "900px", margin: "0 auto", [theme.breakpoints.down('md')]: { margin: 0, paddingLeft: 0, paddingRight: 0, paddingTop: 0 } },
+    root: { marginTop: theme.spacing(12), maxWidth: "900px", margin: "0 auto", [theme.breakpoints.down('md')]: { margin: 0, paddingLeft: 0, paddingRight: 0, paddingTop: 0 } },
     tableHeading: { border: '1px solid #000', height: '30px', textAlign: 'center' },
     tableCell: { border: '1px solid #000', height: '30px', textAlign: 'left' },
 
@@ -150,12 +150,12 @@ class StudentRegistrationPrint extends React.Component {
         return locality
     }
     async componentDidMount() {
-        let studentid = this.props.match.params.studentid
-        let res = await this.props.authenticatedApiCall('get', '/api/teacherservice/getstudentregistrationdetails/'+ studentid , null);
+        let studentId = this.props.match.params.studentId
+        let res = await this.props.authenticatedApiCall('get', '/api/teacherservice/getstudentregistrationdetails/'+ studentId , null);
         if (res.data.status === 1) {
             let data = res.data.statusDescription
             this.setState({
-                schoolName: data.schoolName, schoolNumber: data.schoolNumber, schoolAddress: data.schoolAddress, studentName: data.studentName, adharNumber: data.adharNumber, motherName: data.motherName, fatherName: data.fatherName, className: this.setStudentClass(data.class)+" "+ this.setStudentSection(data.section), cellNumber: data.cellNumber, dob: data.dob,
+                schoolName: data.schoolName, schoolNumber: data.schoolNumber, schoolAddress: data.schoolAddress, studentName: data.studentName, aadharNumber: data.aadharNumber, motherName: data.motherName, fatherName: data.fatherName, className: this.setStudentClass(data.classId)+" "+ this.setStudentSection(data.sectionId), cellNumber: data.cellNumber, dob: data.dob,
                 gender:this.setGender(parseInt(data.gender)), religion: this.setReligion(data.religion), category:this.setCategory(data.category), locality:this.setLocality(data.locality)
             })
         }
@@ -247,4 +247,4 @@ class StudentRegistrationPrint extends React.Component {
         )
     }
 }
-export default withStyles(styles)(AuthenticatedPage(["Teacher"])(StudentRegistrationPrint));
+export default withStyles(styles)(AuthenticatedPage()(StudentRegistrationPrint));

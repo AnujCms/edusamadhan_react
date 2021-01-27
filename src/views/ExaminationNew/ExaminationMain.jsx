@@ -90,7 +90,6 @@ class ExaminationMain extends React.Component {
                             />
                         </RadioGroupValidator>
                     </div>
-                    {/* <Button onClick={this.handlePreviousQuestion} className={classes.primaryButton} disabled={this.props.number == 1}> Previous </Button> */}
                     <Button onClick={this.handleNextQuestion} className={classes.primaryButton} > {(this.props.length === this.props.number) ? "Submit" : "Next"} </Button>
                 </ValidatorForm>
             </>

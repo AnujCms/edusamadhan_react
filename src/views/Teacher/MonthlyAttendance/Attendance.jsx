@@ -10,12 +10,13 @@ import { Formik, Form, Field, connect } from 'formik';
 import AttendanceUI from './AttendanceUI';
 import MuiThemeDataTable from '../../../components/MuiThemeDataTable';
 import AdminImage from '../../assets/images/admin.png';
+import { Formik, Form, Field } from 'formik';
 
 const styles = theme => ({
     root: {
-        margin: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 1,
-        marginTop: theme.spacing.unit * 11,
+        margin: theme.spacing(2),
+        paddingBottom: theme.spacing(1),
+        marginTop: theme.spacing(11),
         [theme.breakpoints.down('md')]: { margin: 0, marginTop: 0 },
     },
     formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
@@ -34,8 +35,6 @@ const styles = theme => ({
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
 });
 
-const periodsObjects = [{ value: 1, label: "1st Period" }, { value: 2, label: "2nd Period" }, { value: 3, label: "3rd Period" }, { value: 4, label: "4th Period" }, { value: 5, label: "5th Period" }, { value: 6, label: "6th Period" }, { value: 7, label: "7th Period" }, { value: 8, label: "8th Period" }, { value: 9, label: "9th Period" }, { value: 10, label: "10th Lunch Break" }]
-
 class Attendance extends React.Component {
     constructor(props) {
         super(props);
@@ -44,7 +43,7 @@ class Attendance extends React.Component {
             periodDetails: []
         }
         this.state = {
-            students: '', periodObj: "", periodStartTime: "07:30", periodEndTime: "08:30", successMessage: '', isSuccess: false, students: [], errorMessage: '', isError: false
+            students: '', successMessage: '', isSuccess: false, students: [], errorMessage: '', isError: false
         };
     }
     tableheads1 = [
@@ -642,6 +641,7 @@ class Attendance extends React.Component {
             })
         }
     }
+
     handleTakeAttendance = () => {
         this.props.history.push('./takeattendance')
     }
@@ -667,4 +667,4 @@ class Attendance extends React.Component {
         );
     }
 }
-export default withStyles(styles)(AuthenticatedPage("Principal")(WithAccount(connect(Attendance))));
+export default withStyles(styles)(AuthenticatedPage()(WithAccount(connect(Attendance))));

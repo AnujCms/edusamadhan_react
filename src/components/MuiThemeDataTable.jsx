@@ -56,7 +56,7 @@ class MuiThemeDataTable extends React.PureComponent {
             }
         }
         else if((this.props.width === "sm" || this.props.width === "xs") && this.props.tableContent === "teachersList" ){
-            columns.push(this.props.columns[1]);
+            columns.push(this.props.columns[2]);
             columns.push(this.props.columns[6]);
             columns.push(this.props.columns[8]);
             this.options.onRowClick = (rowData, rowMeta) => {

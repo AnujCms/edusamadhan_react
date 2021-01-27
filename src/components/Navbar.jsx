@@ -29,7 +29,7 @@ function Navbar(props) {
     const [state, setState] = React.useState({
         left: false
     });
-    const { classes, userDetails,  homeLink, t } = props;
+    const { classes, userDetails,  homeLink } = props;
     var isImage = false;
     if (userDetails.image) {
         isImage = true;
@@ -49,7 +49,6 @@ function Navbar(props) {
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
         axios.get('/api/providerauthservice/signout').then(response =>{
-      console.log(response);  
     })
   window.location.href = "/public/Login"
 }
@@ -63,7 +62,7 @@ function Navbar(props) {
             <List>
                 <ListItem>
                     <span style={{display:"flex"}}> 
-                    <Typography variant="h6" style={{marginTop:"18px"}}> {userDetails.firstname}</Typography>
+                    <Typography variant="h6" style={{marginTop:"18px"}}> {userDetails.firstName}</Typography>
                     <Avatar alt="No Images" src={isImage ? ("data:image/jpeg;base64," + userDetails.image) : TeacherImage} className={classes.avatar} />
                     </span>
                 </ListItem>

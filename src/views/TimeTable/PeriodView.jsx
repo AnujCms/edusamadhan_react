@@ -1,8 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Card, Grid, Paper, Typography, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Card, Grid, Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import AuthenticatedPage from "../AuthenticatedPage";
 import { connect } from 'formik';
+import FormHeader from '../../components/FormHeader';
 
 const styles = (theme) => ({
     paddingBottom: { padding: "15px" },
@@ -10,8 +11,6 @@ const styles = (theme) => ({
     backgroundColor: { background: theme.palette.formcolor.backgroundFullPage, width: "100%", overflowX: 'auto' },
     container: { display: 'flex', flexWrap: 'wrap' },
     textField: { marginLeft: theme.spacing(1), marginRight: theme.spacing(1), width: 200 },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
     tableHeading: { border: '1px solid #000', height: '30px', textAlign: 'left' }
 });
 
@@ -66,9 +65,7 @@ class PeriodView extends React.Component {
         const { classes } = this.props;
         return (
             <>
-                <Paper className={classes.formHeader}>
-                    <Typography className={classes.center}>View Periods</Typography>
-                </Paper>
+                <FormHeader headerText={"View Periods"} pageTitle={"View Periods"} />
                 <Paper>
                     <Card className={classes.backgroundColor}>
                         <Grid container className={classes.questionContainer}>
@@ -83,8 +80,8 @@ class PeriodView extends React.Component {
                                         </TableRow>
                                     </TableHead>
                                     {this.state.periodArray.map((data, i) =>
-                                        <TableBody>
-                                            <TableRow key={i}>
+                                        <TableBody key={'index' + i}>
+                                            <TableRow key={i + 'tablerow'}>
                                                 <TableCell className={classes.tableHeading} key='a'>{data.periodName}</TableCell>
                                                 <TableCell className={classes.tableHeading} key='b'>{data.periodStartTime}</TableCell>
                                                 <TableCell className={classes.tableHeading} key='c'>{data.periodEndTime}</TableCell>
@@ -101,4 +98,4 @@ class PeriodView extends React.Component {
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("Principal")(connect(PeriodView)));
+export default withStyles(styles)(AuthenticatedPage()(connect(PeriodView)));

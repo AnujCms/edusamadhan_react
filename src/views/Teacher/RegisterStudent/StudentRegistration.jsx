@@ -1,53 +1,48 @@
 import React from 'react';
-import { withStyles, Link, Button, Paper, Typography, Grid } from '@material-ui/core';
+import { withStyles, Link, Button } from '@material-ui/core';
 import AuthenticatedPage from "../../AuthenticatedPage";
 import SuccessDialog from '../../../components/SuccessDialog';
 import ErrorDialog from '../../../components/ErrorDialog';
 import { Formik, Form, connect } from 'formik';
 import StudentRegistrationUI from './StudentRegistrationUI';
 import StudentEditRegistrationUI from './StudentEditRegistrationUI';
+import SetClassAndSection from './SetClassAndSection';
 import { string, number, object, mixed } from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 import { formatDate } from '../../../components/utilsFunctions';
 import Spinner from '@material-ui/core/CircularProgress';
-import { Helmet } from "react-helmet";
+import FormHeader from '../../../components/FormHeader';
+import FormFooter from '../../../components/FormFooter';
 
 const styles = (theme) => ({
-    root: { marginTop: theme.spacing.unit * 12, maxWidth: "1050px", margin: "0 auto", [theme.breakpoints.down('md')]: { margin: 0, paddingLeft: 0, paddingRight: 0, paddingTop: 0 } },
-    center: { textAlign: "center", fontWeight: 900, fontSize: "25px !important", paddingTop: "20px" },
+    root: { marginTop: theme.spacing(11), maxWidth: "1050px", margin: "0 auto", [theme.breakpoints.down('md')]: { margin: 0, paddingLeft: 0, paddingRight: 0, paddingTop: 0 } },
     OkButton: { backgroundColor: theme.palette.button.okButtonBackground, borderRadius: "15px", fontSize: "12px", color: "#fff", width: "100px", textAlign: "right", '&:hover': { background: theme.palette.button.okButtonHover } },
-    formHeader: { margin: "0px", height: "70px", width: "100%", background: theme.palette.formcolor.backgroundHeader, color: theme.palette.formcolor.textColor },
-    btnStyle: { margin: "0px", height: "70px", width: "100%", [theme.breakpoints.down('md')]: { marginBottom: "70px" } },
-    cancelBtn: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(255, 255, 255, 1)", color: "rgba(75, 123, 227, 1)", borderRadius: "25px", border: "1px solid rgba(0, 0, 0, 0.12)", marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: 0 } },
-    createUser: { width: "242px", height: "36px", textTransform: "uppercase", backgroundColor: "rgba(75, 123, 227, 1)", color: '#fff', borderRadius: "25px", border: "1px solid " + theme.palette.border.hoverThirdBorder, marginLeft: 25, fontWeight: "500 !important", [theme.breakpoints.down('md')]: { width: "100px", marginLeft: '10px' } },
-
 });
 
 class StudentCreate extends React.Component {
     constructor(props) {
         super(props);
         this.yupSchema = object().shape({
-            firstname: string().required("First Name is required.").max(100, "First name can not be greater than 100 charecters."),
-            lastname: string().required("Last Name is required.").max(100, "Lat name can not be greater than 100 charecters."),
+            firstName: string().required("First Name is required.").min(2, 'First Name can not be less than 2 charecters.').max(20, "First name can not be greater than 20 charecters.").trim().matches(/^[A-Za-z ]+$/, 'This field accepts only alphabets.'),
+            lastName: string().required("Last Name is required.").min(2, 'Last Name can not be less than 2 charecters.').max(20, "Lat name can not be greater than 20 charecters.").trim().matches(/^[A-Za-z ]+$/, 'This field accepts only alphabets.'),
             dob: string().required("Date of Birth is required."),
-            mothername: string().required("Mother Name is required.").max(100, "Mother name can not be greater than 100 charecters."),
-            fathername: string().required("Father Name is required.").max(100, "Father name can not be greater than 100 charecters."),
+            motherName: string().required("Mother Name is required.").min(2, 'Mother Name can not be less than 2 charecters.').max(40, "Mother name can not be greater than 40 charecters.").trim().matches(/^[A-Za-z ]+$/, 'This field accepts only alphabets.'),
+            fatherName: string().required("Father Name is required.").min(2, 'Father Name can not be less than 2 charecters.').max(40, "Father name can not be greater than 40 charecters.").trim().matches(/^[A-Za-z ]+$/, 'This field accepts only alphabets.'),
             gender: number().required("Gender is required."),
-            adharnumber: string().required("AAdhar Number is required.").min(12, ("Please enter valid 12 digit AAdhar number.")).max(12, ("Please enter valid 12 digit AAdhar number.")),
-            cellnumber: string().required("Cell Number is required.").min(10, ("Please enter valid 10 digit cell number.")).max(10, ("Please enter valid 10 digit cell number.")),
+            aadharNumber: string().required("AAdhar Number is required.").min(12, ("Please enter valid 12 digit AAdhar number.")).max(12, ("Please enter valid 12 digit AAdhar number.")).trim().matches(/^[0-9]+$/, 'This field accepts only number.'),
+            cellNumber: string().required("Cell Number is required.").min(10, ("Please enter valid 10 digit cell number.")).max(10, ("Please enter valid 10 digit cell number.")).trim().matches(/^[0-9]+$/, 'This field accepts only number.'),
             category: string().required("Category is required."),
             religion: string().required("Religion is required."),
             locality: string().required("Locality is required."),
             mediumType: string().required("Medium is required."),
-            parmanentaddress: string().required("Parmanent Address is required.").max(100, ("Address is too big.")),
-            localaddress: string().required("Local Address is required.").max(100, ("Address is too big.")),
-            busservice: number().required("This field is required."),
-            route: mixed().when('busservice', { is: 2, then: string().required("This field is required.") })
-
+            parmanentAddress: string().required("Parmanent Address is required.").min(3, 'Parmanent Address can not be less than 3 charecters.').max(200, ("Parmanent Address can not be greater than 200 charecters.")),
+            localAddress: string().required("Local Address is required.").min(3, 'Local Address can not be less than 3 charecters.').max(200, ("Parmanent Address can not be greater than 200 charecters.")),
+            busService: number().required("This field is required."),
+            route: mixed().when('busService', { is: 1, then: string().required("This field is required.") })
         });
-
+        this.feildVariables = { firstName: "", lastName: "", dob: "", motherName: "", fatherName: "", cellNumber: "", aadharNumber: "", gender: "", file: "", religion: "", category: "", locality: "", mediumType: "", localAddress: "", parmanentAddress: "", botharesame: '', busService: '', route: '', classId: "", section: "", status: "" }
         this.state = {
-            adharNumber: '', startSpinner: false, isUpdate: false, updateRegistrationData: '', adharnumber: '', studentRegistrationText: 'Student Registration'
+            aadharNumber: '', startSpinner: false, isUpdate: false, updateRegistrationData: '', aadharNumber: '', studentRegistrationText: 'Student Registration', isClassAndSection: false, classSectionDetails: ''
         }
     }
 
@@ -67,18 +62,21 @@ class StudentCreate extends React.Component {
 
     handleCheckBox = event => {
         if (this.state.checkedValue == true) {
-            this.setState({ checkedValue: false, localaddress: "" })
-        } else { this.setState({ checkedValue: true, localaddress: this.state.parmanentaddress }) }
+            this.setState({ checkedValue: false, localAddress: "" })
+        } else { this.setState({ checkedValue: true, localAddress: this.state.parmanentAddress }) }
     }
 
     async componentDidMount() {
-        let studentid = this.props.studentid;
-        if (studentid == undefined) {
-            this.setState({ buttonText: 'Registration' })
+        let studentId = this.props.studentId;
+        if (studentId == undefined) {
+            let teacherClassSection = await this.props.authenticatedApiCall('get', '/api/teacherservice/getTeacherClassAndSection', null);
+            if (teacherClassSection.data.status == 1) {
+                this.setState({ buttonText: 'Registration', classSectionDetails: teacherClassSection.data.statusDescription, isClassAndSection: true })
+            }
         } else {
-            let response = await this.props.authenticatedApiCall('get', '/api/teacherservice/updateStudentDetails/' + studentid, null);
+            let response = await this.props.authenticatedApiCall('get', '/api/teacherservice/getStudentDetailsForUpdate/' + studentId, null);
             if (response.data.status === 1) {
-                this.setState({ isUpdate: true, updateRegistrationData: response.data.statusDescription[0], adharNumber: response.data.statusDescription[0].adharnumber })
+                this.setState({ isUpdate: true, isClassAndSection: false, updateRegistrationData: response.data.statusDescription[0], aadharNumber: response.data.statusDescription[0].aadharNumber })
             } else if (response.data.status === 0) {
                 this.setState({ isError: true, errorMessage: response.data.statusDescription })
             }
@@ -89,9 +87,8 @@ class StudentCreate extends React.Component {
 
     //Handle the form submit event
     handleSubmit = async (values) => {
-        console.log(values)
-        this.setState({ adharnumber: values.adharnumber, startSpinner: true })
-        let studentid = this.props.studentid;
+        this.setState({ aadharNumber: values.aadharNumber, startSpinner: true })
+        let studentId = this.props.studentId;
         var image;
         if (values.file == null) {
             image = values.file
@@ -101,28 +98,31 @@ class StudentCreate extends React.Component {
             image = values.file
         }
         let dataToSend = {
-            firstname: values.firstname,
-            lastname: values.lastname,
-            mothername: values.mothername,
-            fathername: values.fathername,
-            cellnumber: values.cellnumber,
-            adharnumber: values.adharnumber,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            motherName: values.motherName,
+            fatherName: values.fatherName,
+            cellNumber: values.cellNumber,
+            aadharNumber: values.aadharNumber,
             dob: formatDate(values.dob),
             gender: parseInt(values.gender),
             religion: values.religion.value,
             category: values.category.value,
             locality: values.locality.value,
             mediumType: values.mediumType.value,
-            parmanentaddress: values.parmanentaddress,
-            localaddress: values.localaddress,
+            parmanentAddress: values.parmanentAddress,
+            localAddress: values.localAddress,
             images: image,
-            busservice: parseInt(values.busservice)
+            busService: parseInt(values.busService),
+            classId: values.classId,
+            sectionId: values.sectionId,
+            status: values.status
         }
-        if (values.busservice == 2) {
+        if (values.busService == 1) {
             dataToSend.route = values.route.value
         }
-        if (studentid) {
-            dataToSend.studentid = studentid;
+        if (studentId) {
+            dataToSend.studentId = studentId;
         }
         let response = await this.props.authenticatedApiCall('post', "/api/teacherservice/studentRegistration", dataToSend)
         if (response.data.status == 1) {
@@ -132,7 +132,7 @@ class StudentCreate extends React.Component {
         }
     };
     backDashboard = () => {
-        if (this.props.studentid) {
+        if (this.props.studentId) {
             this.props.history.push(`../studentlist`)
         } else {
             this.props.history.push(`./studentlist`)
@@ -140,7 +140,7 @@ class StudentCreate extends React.Component {
         this.setState({ isError: false, isSuccess: false })
     }
     handleCancel = () => {
-        if (this.props.studentid) {
+        if (this.props.studentId) {
             this.props.history.push('../studentlist')
         } else {
             this.props.history.push('./studentlist')
@@ -148,9 +148,9 @@ class StudentCreate extends React.Component {
     }
     render() {
         const { classes } = this.props;
-        const MyLink = (props) => <RouterLink to={`/studentregistrationprint/${this.state.adharnumber}`} {...props} />
+        const MyLink = (props) => <RouterLink to={`/studentregistrationprint/${this.state.aadharNumber}`} {...props} />
         let successButton = ''
-        if (this.props.studentid === undefined) {
+        if (this.props.studentId === undefined) {
             successButton = [
                 <Button className={classes.OkButton} onClick={this.backDashboard}>No Print</Button>,
                 <Link
@@ -168,26 +168,15 @@ class StudentCreate extends React.Component {
         const HeaderText = "Success"
         return (
             <div className={classes.root}>
-                <Helmet> <title>Create | Edit Student</title></Helmet>
-                <Formik onSubmit={this.handleSubmit} validationSchema={this.yupSchema} initialValues={{ firstname: "", lastname: "", dob: "", mothername: "", fathername: "", cellnumber: "", adharnumber: "", gender: "", file: "", religion: "", category: "", locality: "", localaddress: "", parmanentaddress: "", botharesame: '', busservice: '', route: '' }}>
+                <FormHeader headerText={this.state.studentRegistrationText} pageTitle={"Create | Edit Student"} />
+                <Formik onSubmit={this.handleSubmit} validationSchema={this.yupSchema} initialValues={this.feildVariables}>
                     {(props) => (
                         <Form>
-                            <Paper className={classes.formHeader}>
-                                <Typography className={classes.center}>{this.state.studentRegistrationText}</Typography>
-                            </Paper>
                             {this.state.startSpinner && <Spinner style={{ position: "absolute", top: "80%", left: "45%", zIndex: '99999' }} />}
-                            <StudentRegistrationUI buttonText={this.state.buttonText} startSpinner={this.state.startSpinner} adharNumber={this.state.adharNumber} />
+                            <StudentRegistrationUI buttonText={this.state.buttonText} startSpinner={this.state.startSpinner} aadharNumber={this.state.aadharNumber} />
                             {this.state.isUpdate ? <StudentEditRegistrationUI data={this.state.updateRegistrationData} /> : ""}
-                            <Paper className={classes.btnStyle}>
-                                <Grid container>
-                                    <Grid item lg={6} md={6} sm={6} xs={6} style={{ width: '100%', marginTop: "17px", textAlign: 'end' }}>
-                                        <Button onClick={this.handleCancel} className={classes.cancelBtn}>Cancel</Button>
-                                    </Grid>
-                                    <Grid item lg={6} md={6} sm={6} xs={6} style={{ width: '100%', marginTop: "17px" }}>
-                                        <Button type="submit" disabled={this.state.startSpinner} className={classes.createUser}>Submit</Button>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
+                            {this.state.isClassAndSection && <SetClassAndSection clasAndSection={this.state.classSectionDetails} />}
+                            <FormFooter handleCancel={this.handleCancel} startSpinner={this.state.startSpinner} />
                         </Form>
                     )}
                 </Formik>
@@ -198,4 +187,4 @@ class StudentCreate extends React.Component {
     }
 }
 
-export default withStyles(styles)(AuthenticatedPage("Teacher")(connect(StudentCreate)));
+export default withStyles(styles)(AuthenticatedPage()(connect(StudentCreate)));
